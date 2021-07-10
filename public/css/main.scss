@@ -1,0 +1,20 @@
+
+
+
+
+
+// テーブル（盤面）
+.table {
+    background-color: white;
+    td {
+        width: 60px;
+        height: 60px;
+        background-color: #ddd;
+        text-align: center;
+        font-size: 3rem;
+        cursor: pointer;
+        &.white {
+            font-size: 2.4rem;
+        }
+    }
+}

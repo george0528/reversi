@@ -1,0 +1,17 @@
+.table {
+  background-color: white;
+}
+
+.table td {
+  width: 60px;
+  height: 60px;
+  background-color: #ddd;
+  text-align: center;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.table td.white {
+  font-size: 2.4rem;
+}
+/*# sourceMappingURL=main.css.map */
