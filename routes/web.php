@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [MainController::class, 'index'])->name('index');
-
+Route::get('/reset', [MainController::class, 'reset'])->name('reset');
 
 
 

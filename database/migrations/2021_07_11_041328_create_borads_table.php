@@ -22,7 +22,7 @@ class CreateBoradsTable extends Migration
             $reversi = json_encode($reversi);
             // テーブル　カラム
             $table->bigIncrements('id');
-            $table->string('borad')->default($reversi);
+            $table->string('content')->default($reversi);
             $table->timestamps();
         });
     }

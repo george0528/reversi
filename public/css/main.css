@@ -1,3 +1,9 @@
+.test-white {
+  background-color: black;
+  padding: 10px;
+  color: white;
+}
+
 .table {
   background-color: white;
 }
@@ -13,5 +19,64 @@
 
 .table td.white {
   font-size: 2.4rem;
+}
+
+.component_alert {
+  padding: 15px;
+  margin: 20px 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.component_alert.success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3c763d;
+}
+
+.component_alert.danger {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+.component_alert-a {
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.component_btn {
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  text-decoration: none;
+}
+
+.component_btn.primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.component_btn.danger {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 /*# sourceMappingURL=main.css.map */

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     use HasFactory;
-    protected $guard = [
+    protected $guarded = [
         'id'
     ];
     public function room() {

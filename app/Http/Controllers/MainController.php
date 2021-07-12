@@ -10,6 +10,19 @@ class MainController extends Controller
     // topページ
     public function index(Room $room) {
         $room = $room->find(1);
+        $borad = $room->borad;
+        $b = $borad->getContent();
         return view('main.index', compact('room'));
+    }
+    // リセット
+    public function reset(Room $room) {
+        $reversi[3][3] = 1;
+        $reversi[3][4] = 2;
+        $reversi[4][3] = 2;
+        $reversi[4][4] = 1;
+        $room = $room->find(1);
+        $borad = $room->borad;
+        $borad->fillContent($reversi);
+        return redirect()->route('index');
     }
 }

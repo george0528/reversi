@@ -9,17 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 class Borad extends Model
 {
     use HasFactory;
-    protected $guard = [
+    protected $guarded = [
         'id'
     ];
     // 盤面の配列を保存する
-    public function fillBorad($data) {
+    public function fillContent($data) {
         $data = json_encode($data);
-        $this->fill([$data]);
+        $this->fill(['content' => $data]);
         return $this->save();
     }
     // 盤面の配列をとる
-    public function getBorad() {
-        return json_decode($this->borad, true);
+    public function getContent() {
+        return json_decode($this->content, true);
     }
 }
