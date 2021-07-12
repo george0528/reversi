@@ -15,7 +15,7 @@ class Borad extends Model
     // 盤面の配列を保存する
     public function fillContent($data) {
         $data = json_encode($data);
-        $this->fill(['content' => $data]);
+        return $this->fill(['content' => $data])->save();
         return $this->save();
     }
     // 盤面の配列をとる

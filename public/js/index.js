@@ -15,12 +15,16 @@ $tds.forEach($td => {
     $td.addEventListener('click', () => {
         let index1 = $td.parentNode.dataset.trIndex;
         let index2 = $td.dataset.tdIndex;
+        // nextを持っていたら
+        if($td.classList.contains('next')) {
+        }
         api(index1,index2);
     });
 });
 
 
 // 関数
+// 指定の場所に置く　変更する
 const target = (i1,i2,user) => {
     let $T = $trs[i1].querySelectorAll('td')[i2];
     if(user == 2) {
@@ -41,6 +45,14 @@ const reverse = ($changes,user) => {
         target(elem[1],elem[2],user);
     });
 }
+// 次に置ける場所を指定する
+const nexts = (nexts) => {
+    nexts.forEach(elem => {
+        console.log(elem);
+        let $T = $trs[elem[0]].querySelectorAll('td')[elem[1]];
+        $T.classList.add('next');
+    });
+}
 
 // ajax通信関数
 const api = (i1,i2) => {
@@ -51,13 +63,13 @@ const api = (i1,i2) => {
     .then(json => {
         // おけない場所を選択した場合
         if(json['problem']) {
-            return console.log('その置き場所は問題あり');
+            return console.log('その置き場所は置けません');
         }
         // 指定の場所に置く
         target(json['i1'], json['i2'],json['user']);
         // 変更する　リバース
         reverse(json['changes'],json['user']);
-        // テスト　色を変更する
+        //色を変更する
         if($color.dataset.color == 1) {
             $color.dataset.color = 2;
             $color.textContent = '白';
@@ -66,6 +78,17 @@ const api = (i1,i2) => {
             $color.dataset.color = 1;
             $color.textContent = '黒';
             $color.classList.remove('test-white');
+        }
+        // nextクラスをとる
+        document.querySelectorAll('.next').forEach(e => {
+            e.classList.remove('next');
+        });
+        // 置ける場所がない時　パス
+        if(json['pass']) {
+            console.log('置ける場所がありません。');
+        } else {
+            // 次に置ける場所を指定する
+            nexts(json['nextCoords']);
         }
     })
     .catch(error => {

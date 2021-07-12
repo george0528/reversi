@@ -15,14 +15,9 @@ class CreateBoradsTable extends Migration
     {
         Schema::create('borads', function (Blueprint $table) {
             // オセロ最初の盤面
-            $reversi[3][3] = 1;
-            $reversi[3][4] = 2;
-            $reversi[4][3] = 2;
-            $reversi[4][4] = 1;
-            $reversi = json_encode($reversi);
             // テーブル　カラム
             $table->bigIncrements('id');
-            $table->string('content')->default($reversi);
+            $table->json('content')->nullable();
             $table->timestamps();
         });
     }

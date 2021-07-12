@@ -20,7 +20,8 @@ Route::get('/', [MainController::class, 'index'])->name('index');
 Route::get('/reset', [MainController::class, 'reset'])->name('reset');
 
 
-
+// テスト
+Route::get('/test', [MainController::class, 'test'])->name('test');
 
 
 // Ajax

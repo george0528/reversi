@@ -11,8 +11,10 @@ class AjaxController extends Controller
 {
     // 置く場所を選択したとき
     public function send(Request $request, Room $room) {
+        // 置かれた座標を取得
         $i1 = $request->i1;
         $i2 = $request->i2;
+        // ルームをとる
         $room = $room->find(1);
         $borad = $room->borad;
         $content = $borad->getContent();
@@ -23,7 +25,7 @@ class AjaxController extends Controller
         // ユーザー　白か黒　判断する　ロジックを組む
         $usercolor = intval($request->color);
         //　おけるかチェック
-        $columns = $this->check($i1,$i2,$content,$usercolor);
+        $columns = $this->adjacent($i1,$i2,$content,$usercolor);
         // おけない場合
         if($columns == null) {
             return response()->json(['problem' => true]);
@@ -34,12 +36,25 @@ class AjaxController extends Controller
         $changes = $data['changes'];
         // データベースに保存
         $borad->fillContent($content);
-        // テスト
+        // 次に置ける場所を特定する
+        $nextCoords = $this->nextCoords($usercolor,$content);
+        // 次に置ける場所がない時
+        if($nextCoords == null) {
+            return response()->json([
+                'i1' => $i1,
+                'i2' => $i2,
+                'user' => $usercolor,
+                'changes' => $changes,
+                'pass' => true,
+            ]);
+        }
+        // レスポンス
         return response()->json([
             'i1' => $i1,
             'i2' => $i2,
             'user' => $usercolor,
             'changes' => $changes,
+            'nextCoords' => $nextCoords,
             ]);
     }
 
@@ -93,17 +108,9 @@ class AjaxController extends Controller
 
 
 // ひっくりかえせるか
-    // 端かどうかのチェック関数
-    public function middle($i1,$i2) {
-        if($i1 == 0 || $i2 == 0 || $i1 == 7 || $i2 == 7) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    // 隣接の色のチェック 端の場合
+    // 隣接の色のチェック
     public function adjacent($i1,$i2,$content,$color) {
-        // マイナス1をスタート
+        // 座標をマイナス1する事で 置かれた場所の左端からスタート
         $origI1 = $i1;
         $origI2 = $i2;
         $i1--;
@@ -119,7 +126,7 @@ class AjaxController extends Controller
                         $data = $this->pick($i1,$i2,$content,$diffs,$color);
                         // フラッグがtrueの時
                         if($data['f']) {
-                            // 本名データ（$datas）に入れる
+                            // ひっくり返せる方向の座標のデータ（$datas）に入れる
                             $datas[] = $data['data'];
                             $count++;
                         }
@@ -155,8 +162,9 @@ class AjaxController extends Controller
             if(isset($content[$i1][$i2]) && $content[$i1][$i2] == $color) {
                 return ['f' => true, 'data' => $data];
             }
+            // セットされていなかったら
             if(!isset($content[$i1][$i2])){
-                return ['f' => false];
+                break;
             }
             // 軌跡を保存
             $data[$count][1] = $i1;
@@ -166,16 +174,7 @@ class AjaxController extends Controller
             $i2 += $diffs[2];
             $count++;
         }
-    }
-    // 判定チェック
-    public function check($i1,$i2,$content,$color) {
-        if($this->middle($i1,$i2)) {
-            //　真ん中の処理
-            return $this->adjacent($i1,$i2,$content,$color);
-        } else {
-            // 端の処理
-            return $this->adjacent($i1,$i2,$content,$color);
-        }
+        return ['f' => false];
     }
 
 
@@ -192,5 +191,59 @@ class AjaxController extends Controller
             }
         }
         return ['content' => $content, 'changes' => $changes];
+    }
+
+
+    // 全ての置ける場所が存在しない時
+    public function allNone($content) {
+        $count = 8;
+        // 縦
+        for ($i1=0; $i1 < $count; $i1++) { 
+            // 横
+            for ($i2=0; $i2 < $count; $i2++) { 
+                // コンテントが空の場合　置ける場合
+                if(!isset($content[$i1][$i2])) {
+                    return false;
+                }
+            }
+        }
+        // 置ける箇所が無かった場合
+        return true;
+    }
+
+    // 次に置ける場所の座標を取得
+    public function nextCoords($color,$content) {
+        $count = 8;
+        $datas = [];
+        // 次の相手の色に変換
+        if($color == 1) {
+            $color = 2;
+        } elseif($color == 2) {
+            $color = 1;
+        }
+        // 縦
+        for ($i1=0; $i1 < $count; $i1++) { 
+            // 横
+            for ($i2=0; $i2 < $count; $i2++) { 
+                // コンテントが空の場合　置ける場合
+                if(!isset($content[$i1][$i2])) {
+                    //　おけるかチェック
+                    $columns = $this->adjacent($i1,$i2,$content,$color);
+                    // おける箇所がある場合
+                    if($columns != null) {
+                        $datas[] = [$i1,$i2];
+                    }
+                }
+            }
+        }
+        // 置ける場所が0の時
+        if(count($datas) == 0) {
+            // 全ての置ける場所が0の時
+            return null;
+            if($this->allNone($content)) {
+                return '終了';
+            }
+        }
+        return $datas;
     }
 }

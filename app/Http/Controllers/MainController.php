@@ -25,4 +25,17 @@ class MainController extends Controller
         $borad->fillContent($reversi);
         return redirect()->route('index');
     }
+    // テスト
+    public function test() {
+        $data = [];
+        $count = 0;
+        while($count < 10) {
+            if($count == 5) {
+                break;
+            }
+            $data[] = $count;
+            $count++;
+        }
+        return view('main.test');
+    }
 }

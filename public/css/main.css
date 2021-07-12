@@ -21,6 +21,10 @@
   font-size: 2.4rem;
 }
 
+.table td.next {
+  background-color: #efefef;
+}
+
 .component_alert {
   padding: 15px;
   margin: 20px 0;

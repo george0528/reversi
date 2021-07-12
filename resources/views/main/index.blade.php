@@ -26,5 +26,6 @@
         </table>
     </main>
     <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
+    <a href="{{ route('test') }}" class="component_btn primary">テスト</a>
     <script src="{{ asset('js/index.js') }}"></script>
 @endsection
