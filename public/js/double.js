@@ -42,13 +42,12 @@ const target = (i1,i2,user) => {
 // リバースする
 const reverse = ($changes,user) => {
     $changes.forEach(elem => {
-        target(elem[1],elem[2],user);
+        target(elem[0],elem[1],user);
     });
 }
 // 次に置ける場所を指定する
 const nexts = (nexts) => {
     nexts.forEach(elem => {
-        console.log(elem);
         let $T = $trs[elem[0]].querySelectorAll('td')[elem[1]];
         $T.classList.add('next');
     });

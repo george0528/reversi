@@ -10,9 +10,21 @@ class MainController extends Controller
     // topページ
     public function index(Room $room) {
         $room = $room->find(1);
-        $borad = $room->borad;
-        $b = $borad->getContent();
         return view('main.index', compact('room'));
+    }
+    // モード選択画面
+    public function mode() {
+        return view('main.mode');
+    }
+    // ボット
+    public function bot(Room $room) {
+        $room = $room->find(1);
+        return view('main.index', compact('room'));
+    }
+    // 二人オフライン対戦
+    public function double(Room $room) {
+        $room = $room->find(1);
+        return view('main.double', compact('room'));
     }
     // リセット
     public function reset(Room $room) {
@@ -23,7 +35,7 @@ class MainController extends Controller
         $room = $room->find(1);
         $borad = $room->borad;
         $borad->fillContent($reversi);
-        return redirect()->route('index');
+        return redirect()->back();
     }
     // テスト
     public function test() {
