@@ -17,7 +17,7 @@ class AjaxController extends Controller
         $i1 = $request->i1;
         $i2 = $request->i2;
         // ルームをとる
-        $room = $room->find(1);
+        $room = $room->find($request->room);
         $borad = $room->borad;
         $content = $borad->getContent();
         // ユーザー　白か黒　判断する　ロジックを組む
@@ -42,21 +42,46 @@ class AjaxController extends Controller
         // 次に置ける場所を特定する
         $nexts = $requestLogic->nextCoords($usercolor,$content);
         // 次に置ける場所がない時 パスをtrueにする
-        if(empty($nexts)) {
+        if(isset($nexts['pass'])) {
             $json['pass'] = true;
+        } elseif(isset($nexts['finish'])) {
+            $json['finish'] = true;
         } else {
             // 次に置ける箇所の座標をとる
-            $nextCoords = array_column($nexts, 'coord');
+            $nextCoords = array_column($nexts['coords'], 'coord');
             $json['nextCoords'] = $nextCoords;
         }
         // モード別上限分岐
-        if(isset($request->mode)) {
-            switch ($request->mode) {
+        if(isset($room->mode_id)) {
+            switch ($room->mode_id) {
                 // ボット対戦の時
                 case 1:
                     // ボットの操作
-                    $maxCoord = $botLogic->maxCoord($nexts);
-                    $json['max'] = $maxCoord;
+                    if(!(isset($nexts['pass']) || isset($nexts['finish']))) {
+                        $data = $botLogic->botreverse($nexts, $borad, $usercolor, $content, $json);
+                        // 次に置ける場所がない時 パスをtrueにする
+                        if(isset($data['pass'])) {
+                            return response()->json(['pass' => 'aaaaaaaaa']);
+                            $json['pass'] = true;
+                        } elseif(isset($data['finish'])) {
+                            $json['finish'] = true;
+                        } else {
+                            // 次に置ける箇所の座標をとる
+                            // return response()->json(['a' => $data['finish']]);
+                            $nextCoords = array_column($data['nexts']['coords'], 'coord');
+                            $json['nextCoords'] = $nextCoords;
+                            $json['botChanges'] = $data['changes'];
+                            $json['botCoord'] = $data['coord'];
+                        }
+                    } elseif($nexts['finish']) {
+                        $json['finish'] = true;
+                    } else {
+                        $json['botpass'] = true;
+                    }
+                    // どちらもパスの場合終了
+                    if(isset($json['pass'])  && isset($json['botpass'])) {
+                        $json['finish'] = true;
+                    }
                     break;
                     // オフライン対戦
                     case 2:

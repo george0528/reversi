@@ -2,7 +2,13 @@
 
 namespace App\Http\Logic;
 
+use function PHPUnit\Framework\callback;
+
 class RequestLogic {
+    // test
+    public function test() {
+        return 'a';
+    }
     // 複数の関数をまとめた関数
     // 置ける場合のチェック
     public function check($i1,$i2,$content,$color) {
@@ -12,10 +18,10 @@ class RequestLogic {
         }
         // セカンドチェックで問題がある場合
         $datas = $this->secondcheck($i1,$i2,$content,$color);
-        if(empty($datas)) {
+        if(isset($datas['problem'])) {
             return null;
         }
-        return $datas;
+        return $datas['changes'];
     }
     // 前提のチェック 問題があるかどうか
     public function firstCheck($i1,$i2,$content) {
@@ -56,7 +62,7 @@ class RequestLogic {
                         if($data['f']) {
                             // ひっくり返すコマの座標をデータ（$datas）に入れる
                             foreach($data['data'] as $d) {
-                                $datas[] = $d;
+                                $datas['changes'][] = $d;
                             }
                             $count++;
                         }
@@ -69,7 +75,7 @@ class RequestLogic {
         }
         // ひっくり返せる駒？が無ければ
         if($count == 0) {
-            return null;
+            $datas['problem'] = true;
         }
         return $datas;
     }
@@ -93,11 +99,11 @@ class RequestLogic {
                     //　おけるかチェック
                     $changes = $this->secondcheck($i1,$i2,$content,$color);
                     // おける箇所がある場合
-                    if(isset($changes)) {
+                    if(empty($changes['problem'])) {
                         // 次に置ける箇所の座標を保存
-                        $datas[$count]['coord'] = [$i1,$i2];
+                        $datas['coords'][$count]['coord'] = [$i1,$i2];
                         // 次に置ける箇所に置いた時にひっくり返る数を保存
-                        $datas[$count]['count'] = count($changes);
+                        $datas['coords'][$count]['count'] = count($changes['changes']);
                         $count++;
                     }
                 }
@@ -106,10 +112,10 @@ class RequestLogic {
         // 置ける場所が0の時
         if(count($datas) == 0) {
             // 全ての置ける場所が0の時
-            return null;
             if($this->allNone($content)) {
-                return '終了';
+                $datas['finish'] = true;
             }
+            $datas['pass'] = true;
         }
         return $datas;
     }
@@ -189,14 +195,34 @@ class RequestLogic {
         for ($i1=0; $i1 < $count; $i1++) { 
             // 横
             for ($i2=0; $i2 < $count; $i2++) { 
-                // コンテントが空の場合　置ける場合
-                if(!isset($content[$i1][$i2])) {
-                    return false;
+                // コンテントがある場合　置けない場合
+                if(isset($content[$i1][$i2])) {
+                    return true;
                 }
+            }
+        }
+        // 置ける場所があった場合
+        return false;
+    }
+    public function allNoneCom($i1,$i2,$content) {
+        if(isset($content[$i1][$i2])) {
+            return false;
+        }
+    }
+    // 全てのコマに適用するコールバック関数
+    public function callback($fun,$content) {
+        $count = 8;
+        // 縦
+        for ($i1=0; $i1 < $count; $i1++) { 
+            // 横
+            for ($i2=0; $i2 < $count; $i2++) { 
+                // コンテントが空の場合　置ける場合
+                $fun($i1,$i2,$content);
             }
         }
         // 置ける箇所が無かった場合
         return true;
     }
+
 }
 ?>

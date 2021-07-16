@@ -19,5 +19,8 @@ class BoradSeeder extends Seeder
         DB::table('borads')->insert([
             'id' => 1,
         ]);
+        DB::table('borads')->insert([
+            'id' => 2,
+        ]);
     }
 }

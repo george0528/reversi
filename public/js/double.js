@@ -5,7 +5,7 @@ const $table = document.querySelector('.table');
 const $trs = $table.querySelectorAll('tr');
 const $tds = $table.querySelectorAll('td');
 const $color = document.querySelector('.color');
-
+const room = 2;
 // 回して変数
 
 
@@ -60,6 +60,7 @@ const api = (i1,i2) => {
         return response.json();
     })
     .then(json => {
+        console.log(json);
         // おけない場所を選択した場合
         if(json['problem']) {
             return console.log('その置き場所は置けません');
@@ -108,7 +109,8 @@ const set = (i1,i2) =>{
             'i1' : i1,
             'i2' : i2,
             'color' : $color.dataset.color,
-        })
+            'room' : room,
+        }),
     }
     return setting;
 }

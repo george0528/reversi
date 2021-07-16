@@ -19,11 +19,11 @@ class MainController extends Controller
     // ボット
     public function bot(Room $room) {
         $room = $room->find(1);
-        return view('main.index', compact('room'));
+        return view('main.battle', compact('room'));
     }
     // 二人オフライン対戦
     public function double(Room $room) {
-        $room = $room->find(1);
+        $room = $room->find(2);
         return view('main.double', compact('room'));
     }
     // リセット
@@ -32,9 +32,11 @@ class MainController extends Controller
         $reversi[3][4] = 2;
         $reversi[4][3] = 2;
         $reversi[4][4] = 1;
-        $room = $room->find(1);
-        $borad = $room->borad;
-        $borad->fillContent($reversi);
+        $rooms = $room->all();
+        foreach($rooms as $r) {
+            $borad = $r->borad;
+            $borad->fillContent($reversi);
+        }
         return redirect()->back();
     }
     // テスト
