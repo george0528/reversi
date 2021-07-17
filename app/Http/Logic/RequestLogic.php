@@ -79,6 +79,20 @@ class RequestLogic {
         }
         return $datas;
     }
+    // 次に置ける場所かパスか終了をとる
+    public function nextCheck($nexts, $json) {
+        // 次に置ける場所がない時 パスをtrueにする
+        if(isset($nexts['pass'])) {
+            $json['pass'] = true;
+        } elseif(isset($nexts['finish'])) {
+            $json['finish'] = true;
+        } else {
+            // 次に置ける箇所の座標をとる
+            $nextCoords = array_column($nexts['coords'], 'coord');
+            $json['nextCoords'] = $nextCoords;
+        }
+        return $json;
+    }
     // 次に置ける場所の座標を取得
     public function nextCoords($color,$content) {
         $max = 8;

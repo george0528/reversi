@@ -8,6 +8,7 @@
     const room = 1;
     const color = 1;
     let count = 0;
+    var pass = false;
     // クリックイベント
     $tds.forEach($td => {
         $td.addEventListener('click', () => {
@@ -79,6 +80,7 @@
             return response.json();
         })
         .then(json => {
+            var pass = false;
             console.log(json);
             // おけない場所を選択した場合
             if(json['problem']) {
@@ -107,6 +109,7 @@
                 }
                 // 置ける場所がない時　パス
                 if(json['pass']) {
+                    pass = true;
                     console.log('置ける場所がありません。');
                 } else {
                     // 次に置ける場所を指定する
@@ -115,7 +118,7 @@
                 // テスト
                 $next = document.querySelector('.next');
                 count++;
-                if(count != 10) {
+                if(count != 10 && $next) {
                     $next.click();
                 }
             }, 0);
@@ -139,6 +142,7 @@
                 'i2' : i2,
                 'color' : color,
                 'room' : room,
+                'pass' : pass,
             })
         }
         return setting;

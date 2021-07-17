@@ -15,6 +15,9 @@ class Room extends Model
     public function room() {
         return $this->free();
     }
+    public function waitRooms() {
+        return $this->where('status', 2)->get();
+    }
     // 空きの部屋があるかどうか
     public function free() {
         return $this->where('status', 1)->firstOr(function () {

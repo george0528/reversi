@@ -1,8 +1,9 @@
 @extends('layouts.main')
-@section('title', 'モード選択画面')
+@section('title', 'トップページ')
 @section('content')
-    <h1>モード選択画面</h1>
-    <a href="{{ route('bot') }}">ボットと対戦</a>
-    <a href="">オンライン対戦</a>
-    <a href="{{ route('double') }}">オフライン二人対戦</a>
+    <form action="{{ route('addName') }}" method="post">
+        @csrf
+        <label for="">名前</label><input type="text" name="name">
+        <button type="submit">決定</button>
+    </form>
 @endsection
