@@ -5,10 +5,10 @@
     const $trs = $table.querySelectorAll('tr');
     const $tds = $table.querySelectorAll('td');
     const $color = document.querySelector('.color');
+    const pass = document.querySelector('.pass').querySelector('button');
     const room = 1;
     const color = 1;
     let count = 0;
-    var pass = false;
     // クリックイベント
     $tds.forEach($td => {
         $td.addEventListener('click', () => {
@@ -17,10 +17,13 @@
             // nextを持っていたら
             if($td.classList.contains('next')) {
             }
-            api(index1,index2);
+            api(index1,index2,false);
         });
     });
-    
+    // 
+    pass.addEventListener('click', () => {
+        api(1,1,true);
+    });
     
     // 関数
     // 指定の場所に置く　変更する
@@ -74,23 +77,25 @@
     }
     
     // ajax通信関数
-    const api = (i1,i2) => {
-        fetch(`/ajax/send`, set(i1,i2))
+    const api = (i1,i2,pass) => {
+        fetch(`/ajax/send`, set(i1,i2,pass))
         .then(response => {
             return response.json();
         })
         .then(json => {
-            var pass = false;
             console.log(json);
             // おけない場所を選択した場合
             if(json['problem']) {
                 return console.log('その置き場所は置けません');
             }
-            // 指定の場所に置く
-            target(json['i1'], json['i2'],json['user']);
-            put([json['i1'],json['i2']]);
-            // 変更する　リバース
-            reverse(json['changes'],json['user']);
+            // パスでは無い時
+            if(json['i1'] && json['i2']) {
+                // 指定の場所に置く
+                target(json['i1'], json['i2'],json['user']);
+                put([json['i1'],json['i2']]);
+                // 変更する　リバース
+                reverse(json['changes'],json['user']);
+            }
             // 前のnextクラスを取る
             document.querySelectorAll('.next').forEach(e => {
                 e.classList.remove('next');
@@ -109,18 +114,23 @@
                 }
                 // 置ける場所がない時　パス
                 if(json['pass']) {
-                    pass = true;
-                    console.log('置ける場所がありません。');
+                    document.querySelector('.pass').classList.add('open');
                 } else {
                     // 次に置ける場所を指定する
                     nexts(json['nextCoords']);
                 }
                 // テスト
-                $next = document.querySelector('.next');
+                $nexts = document.querySelectorAll('.next');
                 count++;
-                if(count != 10 && $next) {
+                if(!json['pass'] && $nexts) {
+                    var $next = $nexts[random($nexts)];
                     $next.click();
+                } else {
+                    // document.querySelector('.pass').querySelector('button').click();
                 }
+                // if(count != 10 && $next) {
+                //     $next.click();
+                // }
             }, 0);
         })
         .catch(error => {
@@ -129,7 +139,7 @@
     }
     
     // api設定
-    const set = (i1,i2) =>{
+    const set = (i1,i2,pass) =>{
         let $token = document.querySelector('meta[name="csrf-token"]').content;
         let setting = {
             headers: {
@@ -146,5 +156,11 @@
             })
         }
         return setting;
+    }
+    const random = ($nexts) => {
+        let min = 0;
+        let max = $nexts.length;
+        max--;
+        return Math.floor( Math.random() * (max + 1 - min) ) + min ;
     }
     } ());

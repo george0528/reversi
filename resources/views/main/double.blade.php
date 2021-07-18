@@ -27,6 +27,6 @@
     </main>
     <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
     <a href="{{ route('test') }}" class="component_btn primary">テスト</a>
-    <a href="{{ route('mode') }}" class="component_btn primary">モード選択画面</a>
+    <a href="{{ route('index') }}" class="component_btn primary">モード選択画面</a>
     <script src="{{ asset('js/double.js') }}"></script>
 @endsection

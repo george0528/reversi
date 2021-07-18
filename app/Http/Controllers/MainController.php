@@ -14,12 +14,6 @@ class MainController extends Controller
         $room = $room->find(1);
         return view('main.index', compact('room'));
     }
-    // モード別　名前入力
-    public function mode(Request $request) {
-        $mode = $request->mode;
-        $request->session()->flash('mode', $mode);
-        return view('main.mode');
-    }
     // ボット
     public function bot(Room $room) {
         $room = $room->find(1);
@@ -31,9 +25,21 @@ class MainController extends Controller
         return view('main.double', compact('room'));
     }
     // 二人オンライン対戦
-    public function onlineWait(Room $room) {
+    // 対戦相手待ちリスト
+    public function onlineList(Room $room) {
         $waitRooms = $room->waitRooms();
-        return view('main.wait', compact($waitRooms));
+        return view('main.list', compact('waitRooms'));
+    }
+    // 名前入力フォーム
+    public function name_form(Request $request) {
+        return view('main.name_form');
+    }
+    // ルーム作成
+    public function roomCreate(Room $room, Request $request) {
+        $room = $room->free();
+        // dd($room);
+        $request->session()->put('room_id', $room->id);
+        return view('main.wait');
     }
     // リセット
     public function reset(Room $room) {
@@ -45,7 +51,7 @@ class MainController extends Controller
         foreach($rooms as $r) {
             $borad = $r->borad;
             $borad->fillContent($reversi);
-        }
+        }   
         return redirect()->back();
     }
     // テスト

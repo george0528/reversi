@@ -19,6 +19,7 @@ class CreateBoradsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('next_color')->nullable();
             $table->json('content')->nullable();
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

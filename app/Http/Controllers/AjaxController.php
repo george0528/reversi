@@ -13,13 +13,14 @@ class AjaxController extends Controller
 {
     // 置く場所を選択したとき
     public function send(Request $request, Room $room, RequestLogic $requestLogic, BotLogic $botLogic) {
-        // パスがtrueの時
         // ルームをとる
         $room = $room->find($request->room);
         $borad = $room->borad;
         $content = $borad->getContent();
         // ユーザー　白か黒　判断する　ロジックを組む
         $usercolor = intval($request->color);
+        // パスではない時
+        if(!$request->pass) {
             // 置かれた座標を取得
             $i1 = $request->i1;
             $i2 = $request->i2;
@@ -40,10 +41,16 @@ class AjaxController extends Controller
                 'user' => $usercolor,
                 'changes' => $changes,
             ];
+        } else {
+            $json = [
+                'user' => $usercolor,
+            ];
+        }
             // 次に置ける場所を特定する
             $nexts = $requestLogic->nextCoords($usercolor,$content);
             // 次に置ける場所がない時 パスをtrueにする
             $json = $requestLogic->nextCheck($nexts,$json);
+            
         // モード別上限分岐
         if(isset($room->mode_id)) {
             switch ($room->mode_id) {
@@ -51,6 +58,11 @@ class AjaxController extends Controller
                 case 1:
                     // ボットの操作
                     $json = $botLogic->botnexts($nexts, $borad, $usercolor, $content, $json);
+                    if(isset($json['finish'])) {
+                        $judge = $requestLogic->judge($content);
+                        $json['counts'] = $judge['counts'];
+                        $json['winner'] = $judge['winner'];
+                    }
                     break;
                     // オフライン対戦
                     case 2:

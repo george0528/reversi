@@ -19,12 +19,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [MainController::class, 'index'])->name('index');
 Route::post('/sesison/add/name', [SessionController::class, 'addName'])->name('addName');
-Route::get('/mode', [MainController::class, 'mode'])->name('mode');
 Route::get('/mode/switch', [MainController::class, 'modeSwitch'])->name('modeSwitch');
 Route::get('/mode/bot', [MainController::class, 'bot'])->name('bot');
 Route::get('/mode/double', [MainController::class, 'double'])->name('double');
 Route::get('/reset', [MainController::class, 'reset'])->name('reset');
-Route::get('/mode/online/wait', [MainController::class, 'onlineWait'])->name('onlineWait');
+Route::get('/mode/online/name', [MainController::class, 'name_form'])->name('name_form');
+Route::get('/mode/online/list', [MainController::class, 'onlineList'])->name('onlineList');
+Route::post('/mode/online/create', [MainController::class, 'roomCreate'])->name('roomCreate');
 
 // テスト
 Route::get('/test', [MainController::class, 'test'])->name('test');

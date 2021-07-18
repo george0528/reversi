@@ -84,8 +84,6 @@ class RequestLogic {
         // 次に置ける場所がない時 パスをtrueにする
         if(isset($nexts['pass'])) {
             $json['pass'] = true;
-        } elseif(isset($nexts['finish'])) {
-            $json['finish'] = true;
         } else {
             // 次に置ける箇所の座標をとる
             $nextCoords = array_column($nexts['coords'], 'coord');
@@ -125,10 +123,6 @@ class RequestLogic {
         }
         // 置ける場所が0の時
         if(count($datas) == 0) {
-            // 全ての置ける場所が0の時
-            if($this->allNone($content)) {
-                $datas['finish'] = true;
-            }
             $datas['pass'] = true;
         }
         return $datas;
@@ -224,19 +218,50 @@ class RequestLogic {
         }
     }
     // 全てのコマに適用するコールバック関数
-    public function callback($fun,$content) {
+    public function allCheck($fun,$ary) {
         $count = 8;
         // 縦
         for ($i1=0; $i1 < $count; $i1++) { 
             // 横
             for ($i2=0; $i2 < $count; $i2++) { 
-                // コンテントが空の場合　置ける場合
-                $fun($i1,$i2,$content);
+                // if文　条件分岐
+                $data = call_user_func($fun,$i1,$i2,$ary);
+                if($data['f']) {
+                    $datas[] = $data['data'];
+                }
             }
         }
-        // 置ける箇所が無かった場合
-        return true;
+        // 全てが終わったら
+        return $datas;
     }
-
+    // コマの数を数える
+    public function judge($content) {
+        $data = $this->allCheck([$this,'judge_component'],[$content]);
+        $counts = array_count_values($data);
+        $datas['counts'] = $counts;
+        // 中身がnullの時0を入れる
+        foreach([1,2] as $num) {
+            if(empty($datas['counts'][$num])) {
+                $datas['counts'][$num] = 0;
+            }
+        }
+        if($datas['counts'][1] > $datas['counts'][2]) {
+            $datas['winner'] = 1;
+        } else {
+            $datas['winner'] = 2;
+        }
+        return $datas;
+    }
+    public function judge_component($i1,$i2,$ary) {
+        $content = $ary[0];
+        // 中身があればその値を返す
+        if(isset($content[$i1][$i2])) {
+            $data['f'] = true;
+            $data['data'] = $content[$i1][$i2];
+        } else {
+            $data['f'] = false;
+        }
+        return $data;
+    }
 }
 ?>

@@ -21,7 +21,9 @@ class Room extends Model
     // 空きの部屋があるかどうか
     public function free() {
         return $this->where('status', 1)->firstOr(function () {
-            return $this->create();
+            return $this->create([
+                'status' => 2,
+            ]);
         });
     }
     // DB Boradテーブルに紐づけ

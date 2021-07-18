@@ -7,6 +7,12 @@
     color: white;
 }
 
+.pass {
+    display: none;
+    &.open {
+        display: block;
+    }
+}
 // テーブル（盤面）
 .table {
     background-color: white;

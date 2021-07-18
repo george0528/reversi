@@ -4,6 +4,14 @@
   color: white;
 }
 
+.pass {
+  display: none;
+}
+
+.pass.open {
+  display: block;
+}
+
 .table {
   background-color: white;
 }

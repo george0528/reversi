@@ -19,7 +19,7 @@ class CreateRoomsTable extends Migration
             $table->integer('mode_id')->default(1);
             $table->integer('user1_id')->nullable();
             $table->integer('user2_id')->nullable();
-            $table->boolean('status')->default(1);
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

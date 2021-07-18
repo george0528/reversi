@@ -6,25 +6,25 @@ use App\Http\Logic\RequestLogic;
 
 Class BotLogic {
     public function botnexts($nexts, $borad, $usercolor, $content, $json) {
-        if(!(isset($nexts['pass']) || isset($nexts['finish']))) {
+        // botの操作
+        // 置ける場所があれば
+        if(!isset($nexts['pass'])) {
             $data = $this->botreverse($nexts, $borad, $usercolor, $content);
-            // 次に置ける場所がない時 パスをtrueにする
-            if(isset($data['nexts']['pass'])) {
-                $json['pass'] = true;
-            } elseif(isset($data['nexts']['pass'])) {
-                $json['finish'] = true;
-            } else {
-                // 次に置ける箇所の座標をとる
-                $nextCoords = array_column($data['nexts']['coords'], 'coord');
-                $json['nextCoords'] = $nextCoords;
-            }
             $json['botChanges'] = $data['changes'];
             $json['botCoord'] = $data['coord'];
-        } elseif($nexts['finish']) {
-            $json['finish'] = true;
+            $content = $data['content'];
         } else {
             $json['botpass'] = true;
         }
+        // jsonからパスとフィニッシュを削除
+        unset($json['pass']);
+        //　ユーザーの次に置ける場所を探す
+        $requestLogic = new RequestLogic;
+        // 次に置ける場所を特定する
+        $usercolor = $this->changeColor($usercolor);
+        $nexts = $requestLogic->nextCoords($usercolor,$content);
+        // 次に置ける場所をチェックする
+        $json = $requestLogic->nextCheck($nexts, $json);
         // どちらもパスの場合終了
         if(isset($json['pass'])  && isset($json['botpass'])) {
             $json['finish'] = true;
@@ -36,11 +36,8 @@ Class BotLogic {
         $maxCoord = $this->maxCoord($nexts);
         
         // 色を反転
-        if($usercolor == 1) {
-            $usercolor = 2;
-        } elseif($usercolor == 2) {
-            $usercolor = 1;
-        }
+        $usercolor = $this->changeColor($usercolor);
+
         $requestLogic = new RequestLogic;
         //　おけるかチェック
         $changes = $requestLogic->check($maxCoord[0],$maxCoord[1],$content,$usercolor);
@@ -48,11 +45,8 @@ Class BotLogic {
         $content = $requestLogic->reverse($usercolor,$changes,$content,$maxCoord[0],$maxCoord[1]);
         // データベースに保存
         $borad->fillContent($content);
-        
-        // 次に置ける場所を特定する
-        $nexts = $requestLogic->nextCoords($usercolor,$content);
 
-        return ['changes' => $changes, 'nexts' => $nexts, 'coord' => $maxCoord];
+        return ['changes' => $changes, 'content' => $content , 'coord' => $maxCoord];
     }
     // 一番多くひっくりかえせる場所の座標を取る
     public function maxCoord($nexts) {
@@ -60,6 +54,14 @@ Class BotLogic {
         $counts = array_column($nexts['coords'], 'count');
         $indexs = array_keys($counts,max($counts));
         return $nexts['coords'][$indexs[0]]['coord'];
+    }
+    public function changeColor($color) {
+        if($color == 1) {
+            $color = 2;
+        } elseif($color == 2) {
+            $color = 1;
+        }
+        return $color;
     }
 }
 
