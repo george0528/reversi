@@ -6,9 +6,16 @@
     const $tds = $table.querySelectorAll('td');
     const $color = document.querySelector('.color');
     const pass = document.querySelector('.pass').querySelector('button');
+    const finish = document.querySelector('.finish');
+    const winner = finish.querySelector('.winner');
     const room = 1;
     const color = 1;
     let count = 0;
+    const deleteBtn = document.querySelector('#delete');
+    // テスト
+    deleteBtn.addEventListener('click', () => {
+        finish.classList.remove('open');
+    })
     // クリックイベント
     $tds.forEach($td => {
         $td.addEventListener('click', () => {
@@ -100,9 +107,6 @@
             document.querySelectorAll('.next').forEach(e => {
                 e.classList.remove('next');
             });
-            if(json['finish']) {
-                return console.log('ゲームが終了しました');
-            }
             // ボットが置く
             setTimeout(() => {
                 if(json['botChanges']) {
@@ -119,19 +123,21 @@
                     // 次に置ける場所を指定する
                     nexts(json['nextCoords']);
                 }
-                // テスト
-                $nexts = document.querySelectorAll('.next');
-                count++;
-                if(!json['pass'] && $nexts) {
-                    var $next = $nexts[random($nexts)];
-                    $next.click();
-                } else {
-                    // document.querySelector('.pass').querySelector('button').click();
+                if(json['finish']) {
+                    finish.classList.add('open');
+                    winner.textContent = json['winner'];
+                    return console.log('ゲームが終了しました');
                 }
-                // if(count != 10 && $next) {
+                // テスト
+                // $nexts = document.querySelectorAll('.next');
+                // count++;
+                // if(!json['pass'] && $nexts) {
+                //     var $next = $nexts[random($nexts)];
                 //     $next.click();
+                // } else {
+                //     // document.querySelector('.pass').querySelector('button').click();
                 // }
-            }, 0);
+            }, 1000);
         })
         .catch(error => {
             console.log('エラー：'+error);

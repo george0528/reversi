@@ -13,6 +13,7 @@ Class BotLogic {
             $json['botChanges'] = $data['changes'];
             $json['botCoord'] = $data['coord'];
             $content = $data['content'];
+            $json['content'] = $content;
         } else {
             $json['botpass'] = true;
         }
@@ -25,6 +26,14 @@ Class BotLogic {
         $nexts = $requestLogic->nextCoords($usercolor,$content);
         // 次に置ける場所をチェックする
         $json = $requestLogic->nextCheck($nexts, $json);
+        // 黒がパスの場合　白のnextを調べる
+        if(isset($json['pass'])) {
+            $usercolor = $this->changeColor($usercolor);
+            $nexts = $requestLogic->nextCoords($usercolor,$content);
+            if(isset($nexts['pass'])) {
+                $json['finish'] = true;
+            }
+        }
         // どちらもパスの場合終了
         if(isset($json['pass'])  && isset($json['botpass'])) {
             $json['finish'] = true;

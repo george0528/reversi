@@ -1,8 +1,15 @@
 <?php
 
+use App\Events\MessageRecieved;
+use App\Events\PublicEvent;
+use App\Events\Test;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\WebsocketController;
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +23,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::get('/', [MainController::class, 'index'])->name('index');
 Route::post('/sesison/add/name', [SessionController::class, 'addName'])->name('addName');
 Route::get('/mode/switch', [MainController::class, 'modeSwitch'])->name('modeSwitch');
@@ -29,7 +35,24 @@ Route::post('/mode/online/create', [MainController::class, 'roomCreate'])->name(
 
 // テスト
 Route::get('/test', [MainController::class, 'test'])->name('test');
-
+Route::get('/echo', function () {
+    (function($count) {
+        echo $count;
+        is_null($count) ? Redis::set('count', 0) : Redis::set('count', $count+1);
+    })(Redis::get('count'));
+    broadcast(new App\Events\MessageRecieved);
+});
+Route::get('public', function () {
+    broadcast(new PublicEvent());
+    return 'public';
+});
+Route::get('/fire', function() {
+    $m = 'aaaaaa';
+    $m = json_encode($m);
+    broadcast(new Test($m));
+    return 'fire!!!!!!!!!!!';
+});
+Route::post('/websocket/test', [WebsocketController::class, 'test'])->name('webTest');
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');

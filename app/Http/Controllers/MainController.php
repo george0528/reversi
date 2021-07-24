@@ -36,8 +36,15 @@ class MainController extends Controller
     }
     // ルーム作成
     public function roomCreate(Room $room, Request $request) {
+        $user_id = $request->session()->getId();
+        // 空きルームを取得か作成
         $room = $room->free();
-        // dd($room);
+        // 状態を変更
+        $room = $room->fill([
+            'user1_id' => $user_id,
+            'status' => 2,
+        ]);
+        $room->save();
         $request->session()->put('room_id', $room->id);
         return view('main.wait');
     }

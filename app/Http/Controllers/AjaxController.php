@@ -58,6 +58,10 @@ class AjaxController extends Controller
                 case 1:
                     // ボットの操作
                     $json = $botLogic->botnexts($nexts, $borad, $usercolor, $content, $json);
+                    // 終了かチェック
+                    if(isset($json['content'])) {
+                        $content = $json['content'];
+                    }
                     if(isset($json['finish'])) {
                         $judge = $requestLogic->judge($content);
                         $json['counts'] = $judge['counts'];
