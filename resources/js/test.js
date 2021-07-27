@@ -21,3 +21,8 @@ window.Echo.channel('laravel_database_public-event')
         console.log('PublicEventが発火されました。');
         console.log(e);
     });
+window.Echo.channel('laravel_database_private-private')
+    .listen('PrivateEvent', function(e) {
+        console.log('privateEventが発火');
+        console.log(e);
+    });

@@ -16,3 +16,11 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+Broadcast::channel('private', function ($user) {
+    return true;
+});
+Broadcast::channel('match.{room_id}', function ($u, $room_id) {
+    if(session('room_id') == $room_id) {
+        return true;
+    }
+});

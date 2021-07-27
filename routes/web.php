@@ -2,6 +2,7 @@
 
 use App\Events\MessageRecieved;
 use App\Events\PublicEvent;
+use App\Events\PrivateEvent;
 use App\Events\Test;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\MainController;
@@ -23,6 +24,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/home', function() {
+    return view('welcome');
+});
 Route::get('/', [MainController::class, 'index'])->name('index');
 Route::post('/sesison/add/name', [SessionController::class, 'addName'])->name('addName');
 Route::get('/mode/switch', [MainController::class, 'modeSwitch'])->name('modeSwitch');
@@ -31,20 +35,29 @@ Route::get('/mode/double', [MainController::class, 'double'])->name('double');
 Route::get('/reset', [MainController::class, 'reset'])->name('reset');
 Route::get('/mode/online/name', [MainController::class, 'name_form'])->name('name_form');
 Route::get('/mode/online/list', [MainController::class, 'onlineList'])->name('onlineList');
+Route::get('/mode/online/wait', [MainController::class, 'onlineWait'])->name('onlineWait');
+Route::post('/mode/online/room/join', [MainController::class, 'onlineJoin'])->name('onlineJoin');
+Route::post('/mode/online/room/leave', [MainController::class, 'onlineLeave'])->name('onlineLeave');
+Route::get('/mode/online/room/battle', [MainController::class, 'onlineBattle'])->name('onlineBattle');
 Route::post('/mode/online/create', [MainController::class, 'roomCreate'])->name('roomCreate');
 
 // テスト
 Route::get('/test', [MainController::class, 'test'])->name('test');
 Route::get('/echo', function () {
-    (function($count) {
-        echo $count;
-        is_null($count) ? Redis::set('count', 0) : Redis::set('count', $count+1);
-    })(Redis::get('count'));
-    broadcast(new App\Events\MessageRecieved);
+    // (function($count) {
+    //     echo $count;
+    //     is_null($count) ? Redis::set('count', 0) : Redis::set('count', $count+1);
+    // })(Redis::get('count'));
+    broadcast(new MessageRecieved);
+    return '最初の原因';
 });
 Route::get('public', function () {
-    broadcast(new PublicEvent());
+    event(new PublicEvent);
     return 'public';
+});
+Route::get('private', function () {
+    event(new PrivateEvent);
+    return 'private';
 });
 Route::get('/fire', function() {
     $m = 'aaaaaa';
@@ -56,3 +69,8 @@ Route::post('/websocket/test', [WebsocketController::class, 'test'])->name('webT
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');
+
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');

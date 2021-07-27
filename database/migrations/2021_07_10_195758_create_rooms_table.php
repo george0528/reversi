@@ -17,9 +17,7 @@ class CreateRoomsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('borad_id')->nullable();
             $table->integer('mode_id')->default(1);
-            $table->integer('user1_id')->nullable();
-            $table->integer('user2_id')->nullable();
-            $table->integer('status')->default(1);
+            $table->boolean('is_battle')->default(1);
             $table->timestamps();
         });
     }

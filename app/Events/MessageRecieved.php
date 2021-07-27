@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Redis;
 
-class MessageRecieved
+class MessageRecieved implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

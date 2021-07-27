@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RoomEvent;
 use Illuminate\Http\Request;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 
@@ -17,7 +19,7 @@ class MainController extends Controller
     // ボット
     public function bot(Room $room) {
         $room = $room->find(1);
-        return view('main.battle', compact('room'));
+        return view('main.bot', compact('room'));
     }
     // 二人オフライン対戦
     public function double(Room $room) {
@@ -35,18 +37,47 @@ class MainController extends Controller
         return view('main.name_form');
     }
     // ルーム作成
-    public function roomCreate(Room $room, Request $request) {
-        $user_id = $request->session()->getId();
-        // 空きルームを取得か作成
+    public function roomCreate(Room $room, Request $request, User $user) {
+        // ルームを作成
         $room = $room->free();
         // 状態を変更
         $room = $room->fill([
-            'user1_id' => $user_id,
             'status' => 2,
+            'mode_id' => 3,
         ]);
         $room->save();
+        $user = $user->join_room($room,$request);
         $request->session()->put('room_id', $room->id);
+        return redirect()->route('onlineWait', ['room_id' => $room->id]);
+    }
+    // ルーム　待機所
+    public function onlineWait() {
         return view('main.wait');
+    }
+    // オンライン対戦画面
+    public function onlineBattle(Request $request, Room $room) {
+        $room_id = $request->session()->get('room_id');
+        $room = $room->where('id', $room_id)->first();
+        $users = $room->users;
+        // dd($users); 
+        return view('main.online', compact('room', 'users'));
+    }
+    // 対戦ルーム参加
+    public function onlineJoin(Request $request, Room $room) {
+        $room_id = $request->room_id;
+        $room = $room->join($room_id,$request);
+        if(empty($room)) {
+            return redirect()->route('onlineList')->with('message', 'そのルームは現在ありません。');
+        }
+        $request->session()->put('room_id', $room->id);
+        broadcast(new RoomEvent);
+        return redirect()->route('onlineBattle');
+    }
+    // 待機画面　退出
+    public function onlineLeave(Room $room) {
+        $room_id = session('room_id');
+        $room->destroy($room_id);
+        return redirect()->route('onlineList');
     }
     // リセット
     public function reset(Room $room) {
@@ -63,6 +94,7 @@ class MainController extends Controller
     }
     // テスト
     public function test(Request $request) {
+        dd(session()->getId());
         $data = [];
         $count = 0;
         while($count < 10) {
