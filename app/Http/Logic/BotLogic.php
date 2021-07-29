@@ -5,11 +5,11 @@ namespace App\Http\Logic;
 use App\Http\Logic\RequestLogic;
 
 Class BotLogic {
-    public function botnexts($nexts, $borad, $usercolor, $content, $json) {
+    public function botnexts($nexts, $board, $usercolor, $content, $json) {
         // botの操作
         // 置ける場所があれば
         if(!isset($nexts['pass'])) {
-            $data = $this->botreverse($nexts, $borad, $usercolor, $content);
+            $data = $this->botreverse($nexts, $board, $usercolor, $content);
             $json['botChanges'] = $data['changes'];
             $json['botCoord'] = $data['coord'];
             $content = $data['content'];
@@ -40,7 +40,7 @@ Class BotLogic {
         }
         return $json;
     }
-    public function botreverse($nexts, $borad, $usercolor, $content) {
+    public function botreverse($nexts, $board, $usercolor, $content) {
         // 置く場所を決める
         $maxCoord = $this->maxCoord($nexts);
         
@@ -53,7 +53,7 @@ Class BotLogic {
         // 実際にひっくりかえす
         $content = $requestLogic->reverse($usercolor,$changes,$content,$maxCoord[0],$maxCoord[1]);
         // データベースに保存
-        $borad->fillContent($content);
+        $board->fillContent($content);
 
         return ['changes' => $changes, 'content' => $content , 'coord' => $maxCoord];
     }

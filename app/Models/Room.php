@@ -18,15 +18,15 @@ class Room extends Model
     }
     // 空きの部屋があるかどうか
     public function free() {
-        $borad = new Borad;
+        $board = new Board;
         $content = $this->reset();
-        $b = $borad->create([
+        $b = $board->create([
             'next_color' => 1,
             'content' => $content,
         ]);
         return $this->create([
             'is_battle' => 0,
-            'borad_id' => $b->id,
+            'board_id' => $b->id,
         ]);
     }
     // オセロの最初の盤面
@@ -54,9 +54,9 @@ class Room extends Model
         $user->join_room($room, $request);
         return $room;
     }
-    // DB Boradテーブルに紐づけ
-    public function borad() {
-        return $this->belongsTo(Borad::class, 'borad_id');
+    // DB Boardテーブルに紐づけ
+    public function board() {
+        return $this->belongsTo(Board::class, 'board_id');
     }
     // DB Userテーブルに紐づけ
     public function users() {

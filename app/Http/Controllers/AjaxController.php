@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Logic\BotLogic;
-use App\Models\Borad;
+use App\Models\Board;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use App\Http\Logic\RequestLogic;
@@ -15,8 +15,8 @@ class AjaxController extends Controller
     public function send(Request $request, Room $room, RequestLogic $requestLogic, BotLogic $botLogic) {
         // ルームをとる
         $room = $room->find($request->room);
-        $borad = $room->borad;
-        $content = $borad->getContent();
+        $board = $room->board;
+        $content = $board->getContent();
         // ユーザー　白か黒　判断する　ロジックを組む
         $usercolor = intval($request->color);
         // パスではない時
@@ -33,7 +33,7 @@ class AjaxController extends Controller
             // 実際にひっくりかえす
             $content = $requestLogic->reverse($usercolor,$changes,$content,$i1,$i2);
             // データベースに保存
-            $borad->fillContent($content);
+            $board->fillContent($content);
             // 最低限のデータ
             $json = [
                 'i1' => $i1,
@@ -50,14 +50,13 @@ class AjaxController extends Controller
             $nexts = $requestLogic->nextCoords($usercolor,$content);
             // 次に置ける場所がない時 パスをtrueにする
             $json = $requestLogic->nextCheck($nexts,$json);
-            
         // モード別上限分岐
         if(isset($room->mode_id)) {
             switch ($room->mode_id) {
                 // ボット対戦の時
                 case 1:
                     // ボットの操作
-                    $json = $botLogic->botnexts($nexts, $borad, $usercolor, $content, $json);
+                    $json = $botLogic->botnexts($nexts, $board, $usercolor, $content, $json);
                     // 終了かチェック
                     if(isset($json['content'])) {
                         $content = $json['content'];

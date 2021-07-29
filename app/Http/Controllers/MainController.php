@@ -87,8 +87,8 @@ class MainController extends Controller
         $reversi[4][4] = 1;
         $rooms = $room->all();
         foreach($rooms as $r) {
-            $borad = $r->borad;
-            $borad->fillContent($reversi);
+            $board = $r->board;
+            $board->fillContent($reversi);
         }   
         return redirect()->back();
     }

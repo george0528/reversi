@@ -15,9 +15,9 @@ class CreateRoomsTable extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('borad_id')->nullable();
+            $table->integer('board_id')->nullable();
             $table->integer('mode_id')->default(1);
-            $table->boolean('is_battle')->default(1);
+            $table->boolean('is_battle')->default(0);
             $table->timestamps();
         });
     }

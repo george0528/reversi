@@ -5,6 +5,7 @@ use App\Events\PublicEvent;
 use App\Events\PrivateEvent;
 use App\Events\Test;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WebsocketController;
@@ -43,11 +44,10 @@ Route::post('/mode/online/create', [MainController::class, 'roomCreate'])->name(
 
 // テスト
 Route::get('/test', [MainController::class, 'test'])->name('test');
+Route::get('/livewire', function () {
+    return view('main.livewire');
+})->name('livewire');
 Route::get('/echo', function () {
-    // (function($count) {
-    //     echo $count;
-    //     is_null($count) ? Redis::set('count', 0) : Redis::set('count', $count+1);
-    // })(Redis::get('count'));
     broadcast(new MessageRecieved);
     return '最初の原因';
 });

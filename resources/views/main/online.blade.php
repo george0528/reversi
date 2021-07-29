@@ -1,6 +1,6 @@
 @php
     $count = 8;
-    $reversi = $room->borad->getContent();
+    $reversi = $room->board->getContent();
 @endphp 
 @extends('layouts.main')
 @section('title', 'online')
@@ -15,7 +15,7 @@
         <p>色：{{ $u->color }}</p>
     @endif
 @endforeach
-@include('components.content.borad')
+@include('components.content.board')
     <script src="{{ asset('js/online.js') }}"></script>
     <script src="{{ asset('js/test.js') }}"></script>
 @endsection
