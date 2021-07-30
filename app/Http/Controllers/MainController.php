@@ -28,9 +28,8 @@ class MainController extends Controller
     }
     // 二人オンライン対戦
     // 対戦相手待ちリスト
-    public function onlineList(Room $room) {
-        $waitRooms = $room->waitRooms();
-        return view('main.list', compact('waitRooms'));
+    public function onlineList() {
+        return view('main.list');
     }
     // 名前入力フォーム
     public function name_form(Request $request) {
@@ -46,7 +45,7 @@ class MainController extends Controller
             'mode_id' => 3,
         ]);
         $room->save();
-        $user = $user->join_room($room,$request);
+        // $user = $user->join_room($room,$request);
         $request->session()->put('room_id', $room->id);
         return redirect()->route('onlineWait', ['room_id' => $room->id]);
     }
@@ -58,9 +57,8 @@ class MainController extends Controller
     public function onlineBattle(Request $request, Room $room) {
         $room_id = $request->session()->get('room_id');
         $room = $room->where('id', $room_id)->first();
-        $users = $room->users;
-        // dd($users); 
-        return view('main.online', compact('room', 'users'));
+        // $users = $room->users;
+        return view('main.online', compact('room'));
     }
     // 対戦ルーム参加
     public function onlineJoin(Request $request, Room $room) {

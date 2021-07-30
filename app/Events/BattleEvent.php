@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class Test2
+class BattleEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,6 +31,10 @@ class Test2
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        $room_id = session('room_id');
+        return new PrivateChannel('battle.'.$room_id);
+    }
+    public function broadcastWith() {
+        
     }
 }

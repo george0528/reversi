@@ -13,6 +13,6 @@ window.Echo.channel('laravel_database_private-match.'+room_id)
     .listen('RoomEvent', (e) => {
         console.log(e);
         setTimeout(() => {
-            location.href = 'http://localhost:8000/mode/online/room/battle';
+            location.href = `http://localhost:8000/mode/online/room/battle`;
         }, 2000);
     });

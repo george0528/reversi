@@ -16,7 +16,7 @@ mix.js('resources/js/app.js', 'public/js')
         require('postcss-import'),
         require('tailwindcss'),
     ]);
-mix.js('resources/js/test.js', 'public/js');
+mix.js('resources/js/websocket.js', 'public/js');
 mix.js('resources/js/wait.js', 'public/js');
 if (mix.inProduction()) {
     mix.version();

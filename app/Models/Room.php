@@ -51,7 +51,7 @@ class Room extends Model
         ]);
         $room->save();
         $user = new User;
-        $user->join_room($room, $request);
+        // $user->join_room($room, $request);
         return $room;
     }
     // DB Boardテーブルに紐づけ

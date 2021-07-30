@@ -2,10 +2,12 @@
     $count = 8;
     $reversi = $room->board->getContent();
 @endphp 
-@extends('layouts.main')
+@extends('layouts.livewire')
 @section('title', 'online')
 @section('content')
 <h1>ルーム状況</h1>
+
+@isset($users)
 @foreach ($users as $u)
     @if (session()->getId() ==  $u->session)
         <h2>自分</h2>
@@ -15,7 +17,9 @@
         <p>色：{{ $u->color }}</p>
     @endif
 @endforeach
-@include('components.content.board')
-    <script src="{{ asset('js/online.js') }}"></script>
-    <script src="{{ asset('js/test.js') }}"></script>
+@endisset
+
+{{-- @include('components.content.board') --}}
+@livewire('board')
+    <script src="{{ asset('js/websocket.js') }}"></script>
 @endsection

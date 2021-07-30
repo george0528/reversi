@@ -24,3 +24,8 @@ Broadcast::channel('match.{room_id}', function ($u, $room_id) {
         return true;
     }
 });
+Broadcast::channel('battle.{room_id}', function ($u, $room_id) {
+    if(session('room_id') == $room_id) {
+        return true;
+    }
+});
