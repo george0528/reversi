@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Logic\RequestLogic;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PrivateEvent implements ShouldBroadcast
+class SurrenderEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,11 +32,16 @@ class PrivateEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('private');
+        $room_id = session('room_id');
+        return new PrivateChannel('battle.'.$room_id);
     }
     public function broadcastWith() {
+        $Logic = new RequestLogic;
+        $surrender_color = session('color');
+        $winner_color = $Logic->turnColor($surrender_color);
         return [
-            'message' => 'privatetesttttttttt',
+            'winner' => $winner_color,
+            'message' => '投了しました',
         ];
     }
 }

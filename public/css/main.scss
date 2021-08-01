@@ -1,6 +1,9 @@
 
 
 
+.displaynone {
+    display: none;
+}
 .test-white {
     background-color: black;
     padding: 10px;
@@ -109,6 +112,10 @@
         border-radius: 0.25rem;
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         text-decoration: none;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.8;
+        }
         &.primary {
             color: #fff;
             background-color: #007bff;
@@ -118,6 +125,63 @@
             color: #fff;
             background-color: #dc3545;
             border-color: #dc3545;
+        }
+    }
+    // 背景カバー
+    &_cover {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 50;
+        &.black {
+            background-color: rgba(black, 0.6);
+        }
+        &_child {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+        }
+    }
+    // ロードのサークル
+    &_load_circle {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        border: 5px solid transparent;
+        border-top: 5px solid black;
+        animation: turn 0.7s linear infinite;
+        @keyframes turn {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    }
+    // 点滅
+    &_flash_text {
+        color: #000;
+        animation: flash 1s linear infinite;
+        @keyframes flash {
+            0% {
+                color: rgba(black, 1);
+            }
+            50% {
+                color: rgba(black, 0.3);
+            }
+            100% {
+                color: rbga(black, 1);
+            }
         }
     }
 }

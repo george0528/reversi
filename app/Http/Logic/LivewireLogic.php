@@ -3,6 +3,7 @@
 namespace App\Http\Logic;
 
 use App\Models\Room;
+use GuzzleHttp\Psr7\Request;
 
 Class LivewireLogic {
     public function put($i1, $i2, $color, $room_id) {
@@ -11,6 +12,13 @@ Class LivewireLogic {
         $room = $room->find($room_id);
         $board = $room->board;
         $content = $board->getContent();
+        $next_color = $board->next_color;
+        //　その色が置く番か
+        if($color != $next_color) {
+            return [
+                'problem' => true,
+            ];
+        }
         // 置けるかチェック
         $changes = $rLogic->check($i1, $i2, $content, $color);
         // 置けない場合
@@ -22,18 +30,24 @@ Class LivewireLogic {
         // 実際にひっくりかえす
         $content = $rLogic->reverse($color,$changes,$content,$i1,$i2);
         // DBに保存
-        $board->fillContent($content);
+        $board->updateContent($content,$color);
+        // 終了かチェック
+        $judge_finish = $rLogic->judge_finish($content,$color);
         return [
             'content' => $content,
+            'finish' => $judge_finish,
         ];
+    }
+    public function pass($color) {
+        $room = new Room;
+        $room_id = session('room_id');
+        $room = $room->find($room_id);
+        $board = $room->board;
+        $board->changeNextColor($color);
     }
     public function nexts($color, $content) {
         $Logic = new RequestLogic;
-        if($color == 1) {
-            $color = 2;
-        } elseif($color == 2) {
-            $color = 1;
-        }
+        $color = $Logic->turnColor($color);
         $nexts = $Logic->nextCoords($color, $content);
         if(empty($nexts['coords'])) {
             return null;

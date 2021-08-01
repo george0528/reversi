@@ -1,3 +1,7 @@
+.displaynone {
+  display: none;
+}
+
 .test-white {
   background-color: black;
   padding: 10px;
@@ -115,6 +119,11 @@
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.component_btn:hover {
+  opacity: 0.8;
 }
 
 .component_btn.primary {
@@ -127,5 +136,103 @@
   color: #fff;
   background-color: #dc3545;
   border-color: #dc3545;
+}
+
+.component_cover {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.component_cover.black {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.component_cover_child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 50px;
+}
+
+.component_load_circle {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  border-top: 5px solid black;
+  -webkit-animation: turn 0.7s linear infinite;
+          animation: turn 0.7s linear infinite;
+}
+
+@-webkit-keyframes turn {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes turn {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+.component_flash_text {
+  color: #000;
+  -webkit-animation: flash 1s linear infinite;
+          animation: flash 1s linear infinite;
+}
+
+@-webkit-keyframes flash {
+  0% {
+    color: black;
+  }
+  50% {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    color: rbga(black, 1);
+  }
+}
+
+@keyframes flash {
+  0% {
+    color: black;
+  }
+  50% {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    color: rbga(black, 1);
+  }
 }
 /*# sourceMappingURL=main.css.map */

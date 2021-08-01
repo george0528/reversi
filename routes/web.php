@@ -47,25 +47,11 @@ Route::get('/test', [MainController::class, 'test'])->name('test');
 Route::get('/livewire', function () {
     return view('main.livewire');
 })->name('livewire');
-Route::get('/echo', function () {
-    broadcast(new MessageRecieved);
-    return '最初の原因';
-});
-Route::get('public', function () {
-    event(new PublicEvent);
-    return 'public';
-});
-Route::get('private', function () {
-    event(new PrivateEvent);
-    return 'private';
-});
-Route::get('/fire', function() {
-    $m = 'aaaaaa';
-    $m = json_encode($m);
-    broadcast(new Test($m));
-    return 'fire!!!!!!!!!!!';
-});
-Route::post('/websocket/test', [WebsocketController::class, 'test'])->name('webTest');
+Route::get('/session/all', function() {
+    $all = session()->all();
+    $id = session()->getId();
+    dd($all);
+})->name('session_all');
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');

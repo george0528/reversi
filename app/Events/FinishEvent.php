@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Logic\RequestLogic;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,18 +11,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class Test implements ShouldBroadcast
+class FinishEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $message;
+    public $content = [];
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($content)
     {
-        $this->message = $message;
+        $this->content = $content;
     }
 
     /**
@@ -31,11 +32,13 @@ class Test implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('test');
+        $room_id = session('room_id');
+        return new PrivateChannel('battle.'.$room_id);
     }
     public function broadcastWith() {
-        return [
-            'message' => $this->message,
-        ];
+        $Logic = new RequestLogic;
+        $results = $Logic->judge($this->content);
+        $results['message'] = '終了しました';
+        return $results;
     }
 }

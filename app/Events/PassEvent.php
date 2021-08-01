@@ -9,9 +9,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Redis;
 
-class MessageRecieved implements ShouldBroadcast
+class PassEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,14 +31,12 @@ class MessageRecieved implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('test');
+        $room_id = session('room_id');
+        return new PrivateChannel('battle.'.$room_id);
     }
-    
-
     public function broadcastWith() {
         return [
-            'count' => Redis::get('count'),
-            'static' => 'STATIC STRING',
+            'message' => '相手がパスしました',
         ];
     }
 }

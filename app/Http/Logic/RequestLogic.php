@@ -53,19 +53,17 @@ class RequestLogic {
         for ($parentI=0; $parentI < 3; $parentI++) { 
             // 横
             for ($childI=0; $childI < 3; $childI++) { 
-                if(isset($content[$i1][$i2])) {
-                    // 自分の色と違う時
-                    if($content[$i1][$i2] != $color) {
-                        $diffs = $this->diff($i1,$i2,$origI1,$origI2);
-                        $data = $this->pick($i1,$i2,$content,$diffs,$color);
-                        // フラッグがtrueの時
-                        if($data['f']) {
-                            // ひっくり返すコマの座標をデータ（$datas）に入れる
-                            foreach($data['data'] as $d) {
-                                $datas['changes'][] = $d;
-                            }
-                            $count++;
+                // 自分の色と違う時
+                if(isset($content[$i1][$i2]) && $content[$i1][$i2] != $color) {
+                    $diffs = $this->diff($i1,$i2,$origI1,$origI2);
+                    $data = $this->pick($i1,$i2,$content,$diffs,$color);
+                    // フラッグがtrueの時
+                    if($data['f']) {
+                        // ひっくり返すコマの座標をデータ（$datas）に入れる
+                        foreach($data['data'] as $d) {
+                            $datas['changes'][] = $d;
                         }
+                        $count++;
                     }
                 }
                 $i2++;
@@ -97,11 +95,7 @@ class RequestLogic {
         $datas = [];
         $count = 0;
         // 次の相手の色に変換
-        if($color == 1) {
-            $color = 2;
-        } elseif($color == 2) {
-            $color = 1;
-        }
+        $color = $this->turnColor($color);
         // 縦
         for ($i1=0; $i1 < $max; $i1++) { 
             // 横
@@ -212,7 +206,7 @@ class RequestLogic {
         // 置ける場所があった場合
         return false;
     }
-    public function allNoneCom($i1,$i2,$content) {
+    public function put_place_none($i1,$i2,$content) {
         if(isset($content[$i1][$i2])) {
             return false;
         }
@@ -252,6 +246,7 @@ class RequestLogic {
         }
         return $datas;
     }
+    // コマの数を数えるコンポーネント関数
     public function judge_component($i1,$i2,$ary) {
         $content = $ary[0];
         // 中身があればその値を返す
@@ -262,6 +257,25 @@ class RequestLogic {
             $data['f'] = false;
         }
         return $data;
+    }
+    // 終了か判定処理
+    public function judge_finish($content,$color) {
+        $enemy_nexts = $this->nextCoords($color, $content);
+        $color = $this->turnColor($color);
+        $my_nexts = $this->nextCoords($color, $content);
+        if(empty($enemy_nexts['coords']) && empty($my_nexts['coords'])) {
+            return true;
+        }
+        return false;
+    }
+    // 色反転
+    public function turnColor($color) {
+        if($color == 1) {
+            $color = 2;
+        } elseif($color == 2) {
+            $color = 1;
+        }
+        return $color;
     }
 }
 ?>

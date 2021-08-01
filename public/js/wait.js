@@ -11760,7 +11760,7 @@ var room_id = params.get('room_id');
 window.Echo.channel('laravel_database_private-match.' + room_id).listen('RoomEvent', function (e) {
   console.log(e);
   setTimeout(function () {
-    location.href = "http://localhost:8000/mode/online/room/battle?room_id=".concat(room_id);
+    location.href = "http://localhost:8000/mode/online/room/battle";
   }, 2000);
 });
 })();

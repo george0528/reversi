@@ -33,10 +33,16 @@ class MainController extends Controller
     }
     // 名前入力フォーム
     public function name_form(Request $request) {
+        if(session()->has('name')) {
+            return redirect()->route('onlineList');
+        }
         return view('main.name_form');
     }
     // ルーム作成
     public function roomCreate(Room $room, Request $request, User $user) {
+        if($request->session()->has('is_join')) {
+            return redirect()->route('onlineList');
+        }
         // ルームを作成
         $room = $room->free();
         // 状態を変更
@@ -47,6 +53,8 @@ class MainController extends Controller
         $room->save();
         // $user = $user->join_room($room,$request);
         $request->session()->put('room_id', $room->id);
+        $request->session()->put('is_join', 1);
+        $request->session()->put('color', 1);
         return redirect()->route('onlineWait', ['room_id' => $room->id]);
     }
     // ルーム　待機所
@@ -55,19 +63,22 @@ class MainController extends Controller
     }
     // オンライン対戦画面
     public function onlineBattle(Request $request, Room $room) {
-        $room_id = $request->session()->get('room_id');
-        $room = $room->where('id', $room_id)->first();
         // $users = $room->users;
-        return view('main.online', compact('room'));
+        return view('main.online');
     }
     // 対戦ルーム参加
     public function onlineJoin(Request $request, Room $room) {
+        if($request->session()->has('is_join')) {
+            return redirect()->route('onlineList');
+        }
         $room_id = $request->room_id;
         $room = $room->join($room_id,$request);
         if(empty($room)) {
             return redirect()->route('onlineList')->with('message', 'そのルームは現在ありません。');
         }
         $request->session()->put('room_id', $room->id);
+        $request->session()->put('is_join', 1);
+        $request->session()->put('color', 2);
         broadcast(new RoomEvent);
         return redirect()->route('onlineBattle');
     }
@@ -75,6 +86,9 @@ class MainController extends Controller
     public function onlineLeave(Room $room) {
         $room_id = session('room_id');
         $room->destroy($room_id);
+        session()->forget('room_id');
+        session()->forget('color');
+        session()->forget('is_join');
         return redirect()->route('onlineList');
     }
     // リセット

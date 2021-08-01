@@ -1,7 +1,3 @@
-@php
-    $count = 8;
-    $reversi = $room->board->getContent();
-@endphp 
 @extends('layouts.livewire')
 @section('title', 'online')
 @section('content')
