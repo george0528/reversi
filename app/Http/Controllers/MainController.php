@@ -31,27 +31,17 @@ class MainController extends Controller
     public function onlineList() {
         return view('main.list');
     }
-    // 名前入力フォーム
-    public function name_form(Request $request) {
-        if(session()->has('name')) {
-            return redirect()->route('onlineList');
-        }
-        return view('main.name_form');
-    }
     // ルーム作成
     public function roomCreate(Room $room, Request $request, User $user) {
-        if($request->session()->has('is_join')) {
-            return redirect()->route('onlineList');
-        }
         // ルームを作成
         $room = $room->free();
         // 状態を変更
         $room = $room->fill([
-            'status' => 2,
+            'is_wait' => 1,
             'mode_id' => 3,
         ]);
         $room->save();
-        // $user = $user->join_room($room,$request);
+        $user = $user->join_room($room);
         $request->session()->put('room_id', $room->id);
         $request->session()->put('is_join', 1);
         $request->session()->put('color', 1);
@@ -63,14 +53,11 @@ class MainController extends Controller
     }
     // オンライン対戦画面
     public function onlineBattle(Request $request, Room $room) {
-        // $users = $room->users;
+        $users = $room->users;
         return view('main.online');
     }
     // 対戦ルーム参加
     public function onlineJoin(Request $request, Room $room) {
-        if($request->session()->has('is_join')) {
-            return redirect()->route('onlineList');
-        }
         $room_id = $request->room_id;
         $room = $room->join($room_id,$request);
         if(empty($room)) {
@@ -84,6 +71,12 @@ class MainController extends Controller
     }
     // 待機画面　退出
     public function onlineLeave(Room $room) {
+
+        
+        // ユーザーのroom_idを削除する　　
+        // ...code
+
+
         $room_id = session('room_id');
         $room->destroy($room_id);
         session()->forget('room_id');

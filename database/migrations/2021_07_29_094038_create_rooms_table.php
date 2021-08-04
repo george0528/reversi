@@ -18,6 +18,7 @@ class CreateRoomsTable extends Migration
             $table->integer('board_id')->nullable();
             $table->integer('mode_id')->default(1);
             $table->boolean('is_battle')->default(0);
+            $table->boolean('is_wait')->default(0);
             $table->timestamps();
         });
     }

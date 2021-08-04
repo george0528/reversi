@@ -8,7 +8,7 @@
     <div class="component_flash_text">自動更新中…</div>
     @isset($waitRooms)
     @foreach ($waitRooms as $r)
-        <div wire:loading.class="displaynone">
+        <div>
             <p>ID:{{ $r->id }}</p>
             <form action="{{ route('onlineJoin',['room_id' => $r->id]) }}" method="post">
                 @csrf

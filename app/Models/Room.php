@@ -14,7 +14,7 @@ class Room extends Model
     ];
     // 対戦待ち
     public function waitRooms() {
-        return $this->where('is_battle', 0)->where('mode_id', 3)->get();
+        return $this->where('is_battle', 0)->where('is_wait', 1)->where('mode_id', 3)->get();
     }
     // 空きの部屋があるかどうか
     public function free() {
@@ -39,8 +39,8 @@ class Room extends Model
         return $reversi;
     }
     // 
-    public function join($room_id, $request) {
-        $room = $this->where('id', $room_id)->where('is_battle', 0)->firstOr(function() {
+    public function join($room_id) {
+        $room = $this->where('id', $room_id)->where('is_wait', 1)->where('is_battle', 0)->firstOr(function() {
             return null;
         });
         if(empty($room)) {
@@ -51,7 +51,7 @@ class Room extends Model
         ]);
         $room->save();
         $user = new User;
-        // $user->join_room($room, $request);
+        $user->join_room($room);
         return $room;
     }
     // DB Boardテーブルに紐づけ

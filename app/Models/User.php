@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Room;
+
 
 class User extends Authenticatable
 {
@@ -17,7 +19,6 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -58,4 +59,14 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+    public function join_room($room) {
+        $user = auth()->user();
+        $room_id = $room->id;
+        $user->room_id = $room_id;
+        $user->save();
+    }
+    // DB Roomに紐づけ
+    public function room() {
+        return $this->belongsTo(Room::class, 'room_id');
+    }
 }

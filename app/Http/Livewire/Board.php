@@ -89,7 +89,7 @@ class Board extends Component
             // $this->emit('pass'); // 消す
         } else {
             $this->nexts = $nexts;
-            // $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
+            $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
         }
     }
     public function finish($data) {
