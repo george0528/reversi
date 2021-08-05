@@ -22,7 +22,9 @@ class SurrenderEvent implements ShouldBroadcast
      */
     public function __construct()
     {
-        //
+        $room = auth()->user()->room;
+        $room->is_battle = 0;
+        $room->save();
     }
 
     /**
@@ -32,12 +34,12 @@ class SurrenderEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        $room_id = session('room_id');
+        $room_id = auth()->user()->room_id;
         return new PrivateChannel('battle.'.$room_id);
     }
     public function broadcastWith() {
         $Logic = new RequestLogic;
-        $surrender_color = session('color');
+        $surrender_color = auth()->user()->color;
         $winner_color = $Logic->turnColor($surrender_color);
         return [
             'winner' => $winner_color,

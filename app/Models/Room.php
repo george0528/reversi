@@ -47,12 +47,26 @@ class Room extends Model
             return null;
         }
         $room->fill([
+            'is_wait' => 0,
             'is_battle' => 1,
         ]);
         $room->save();
-        $user = new User;
+        $user = auth()->user();
         $user->join_room($room);
+        $users = $room->users;
+        $this->give_color($users);
         return $room;
+    }
+    // 色決め
+    public function give_color($users) {
+        $colors = [1, 2];
+        // シャッフル
+        shuffle($colors);
+        for ($i=0; $i < count($users); $i++) { 
+            $user = $users[$i];
+            $user->color = $colors[$i];
+            $user->save();
+        }
     }
     // DB Boardテーブルに紐づけ
     public function board() {

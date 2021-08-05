@@ -18,8 +18,10 @@ class isBattale
     public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
-        if(isset($user->room) && $user->room->is_battle == 1) {
-            return redirect(route('index'));
+        if(isset($user->room) && isset($user->room_id)) {
+            if($user->room->is_battle == 1) {
+                return redirect(route('index'));
+            }
         }
         return $next($request);
     }

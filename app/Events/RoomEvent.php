@@ -31,7 +31,7 @@ class RoomEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        $room_id = session('room_id');
+        $room_id = auth()->user()->room_id;
         return new PrivateChannel('match.'.$room_id);
     }
     public function broadcastWith() {

@@ -32,14 +32,19 @@ class Board extends Component
             "echo:laravel_database_private-battle.{$this->room_id},PassEvent" => 'enemy_pass',
             "echo:laravel_database_private-battle.{$this->room_id},FinishEvent" => 'finish',
             "echo:laravel_database_private-battle.{$this->room_id},SurrenderEvent" => 'finish',
+            // "echo-presence:presence.{$this->room_id},here" => 'presence_action',
+            // "echo-presence:presence.{$this->room_id},joining" => 'presence_action',
+            "echo-presence:presence.{$this->room_id},leaving" => 'enemy_leave',
+            // "echo-presence:presence.{$this->room_id},listen, PresenceEvent" => 'p_listen',
             'put', // 消す
             'pass', // 消す
         ];
     }
     public function mount()
     {
-        $this->color = session('color');
-        $this->room_id = session('room_id');
+        $user = auth()->user();
+        $this->color = $user->color;
+        $this->room_id = $user->room_id;
         $room = new Room;
         $room = $room->find($this->room_id);
         $this->content = $room->board->getContent();
@@ -96,26 +101,39 @@ class Board extends Component
         $this->next_color = $this->color;
         $this->winner = $data['winner'];
         $this->finish_message = $data['message'];
+        if($this->winner == $this->color) {
+            $board = auth()->user()->room->board;
+            $board->winner = auth()->user()->id;
+            $board->save();
+        }
+        $this->user_data_delete();
         $this->data_reset();
     }
     public function surrender() {
         broadcast(new SurrenderEvent);
     }
     public function finish_btn() {
-        $this->session_data_delete();
         return redirect()->route('onlineList');
     }
     public function data_reset() {
         $this->reset(['message', 'nexts', 'pass']);
     }
-    public function session_data_delete() {
-        session()->forget('room_id');
-        session()->forget('color');
-        session()->forget('is_join');
+    public function user_data_delete() {
+        $user = auth()->user();
+        $user->room_id = null;
+        $user->color = null;
+        $user->save();
     }
     public function turn_next_color() {
         $Logic = new RequestLogic;
         $this->next_color = $Logic->turnColor($this->next_color);
+    }
+    // プレゼンス チャンネル
+    public function enemy_leave() {
+        $this->finish([
+            'winner' => $this->color,
+            'message' => '敵が接続切れしました',
+        ]);
     }
     public function render()
     {

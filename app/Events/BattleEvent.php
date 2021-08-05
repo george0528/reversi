@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BattleEvent
+class BattleEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,7 +31,7 @@ class BattleEvent
      */
     public function broadcastOn()
     {
-        $room_id = session('room_id');
+        $room_id = auth()->user()->room_id;
         return new PrivateChannel('battle.'.$room_id);
     }
     public function broadcastWith() {

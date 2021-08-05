@@ -11759,9 +11759,7 @@ var params = new URLSearchParams(location.search);
 var room_id = params.get('room_id');
 window.Echo.channel('laravel_database_private-match.' + room_id).listen('RoomEvent', function (e) {
   console.log(e);
-  setTimeout(function () {
-    location.href = "http://localhost:8000/mode/online/room/battle";
-  }, 2000);
+  location.href = "http://localhost:8000/mode/online/room/battle";
 });
 })();
 

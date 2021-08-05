@@ -8,9 +8,6 @@ use Livewire\Component;
 class RoomList extends Component
 {
     public $waitRooms;
-    public function delete() {
-        session()->forget('is_join');
-    }
     public function render()
     {
         $room = new Room;

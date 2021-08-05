@@ -11755,7 +11755,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'socket.io',
   host: 'http://localhost:6001'
 });
-console.log('jsは生きてます'); //購読するチャネルの設定
+console.log('jsは生きてます');
+window.Echo.join('test.1'); //購読するチャネルの設定
 })();
 
 /******/ })()

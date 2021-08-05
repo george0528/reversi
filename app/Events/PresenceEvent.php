@@ -31,8 +31,8 @@ class PresenceEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        $test_id = 1;
-        return new PresenceChannel('test.'.$test_id);
+        $room_id = auth()->user()->room_id;
+        return new PresenceChannel('presence.'.$room_id);
     }
     public function broadcastWith() {
         return [

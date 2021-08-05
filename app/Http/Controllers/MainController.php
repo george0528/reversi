@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Session;
 
 class MainController extends Controller
 {
@@ -42,9 +41,6 @@ class MainController extends Controller
         ]);
         $room->save();
         $user = $user->join_room($room);
-        $request->session()->put('room_id', $room->id);
-        $request->session()->put('is_join', 1);
-        $request->session()->put('color', 1);
         return redirect()->route('onlineWait', ['room_id' => $room->id]);
     }
     // ルーム　待機所
@@ -53,8 +49,9 @@ class MainController extends Controller
     }
     // オンライン対戦画面
     public function onlineBattle(Request $request, Room $room) {
-        $users = $room->users;
-        return view('main.online');
+        $room_id = auth()->user()->room->id;
+        $users = $room->find($room_id)->users;
+        return view('main.online', compact('users'));
     }
     // 対戦ルーム参加
     public function onlineJoin(Request $request, Room $room) {
@@ -63,25 +60,17 @@ class MainController extends Controller
         if(empty($room)) {
             return redirect()->route('onlineList')->with('message', 'そのルームは現在ありません。');
         }
-        $request->session()->put('room_id', $room->id);
-        $request->session()->put('is_join', 1);
-        $request->session()->put('color', 2);
         broadcast(new RoomEvent);
         return redirect()->route('onlineBattle');
     }
     // 待機画面　退出
     public function onlineLeave(Room $room) {
-
-        
         // ユーザーのroom_idを削除する　　
-        // ...code
-
-
-        $room_id = session('room_id');
+        $user = auth()->user();
+        $room_id = $user->room_id;
+        $user->room_id = null;
+        $user->save();
         $room->destroy($room_id);
-        session()->forget('room_id');
-        session()->forget('color');
-        session()->forget('is_join');
         return redirect()->route('onlineList');
     }
     // リセット

@@ -23,6 +23,9 @@ class FinishEvent implements ShouldBroadcast
     public function __construct($content)
     {
         $this->content = $content;
+        $room = auth()->user()->room;
+        $room->is_battle = 0;
+        $room->save();
     }
 
     /**
@@ -32,7 +35,7 @@ class FinishEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        $room_id = session('room_id');
+        $room_id = auth()->user()->room_id;
         return new PrivateChannel('battle.'.$room_id);
     }
     public function broadcastWith() {

@@ -4,6 +4,7 @@ use App\Events\MessageRecieved;
 use App\Events\PublicEvent;
 use App\Events\PrivateEvent;
 use App\Events\Test;
+use App\Models\Room;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MainController;
@@ -47,16 +48,15 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/mode/online/room/battle', [MainController::class, 'onlineBattle'])->name('onlineBattle');
 });
 
-// テスト
-Route::get('/session', function () {
-    session(['test' => 'aaaaaaa']);
-});
 Route::get('/delete', function() {
     $user = auth()->user();
     $user->room_id = null;
     $user->save();
 });
 Route::get('/test', function () {
+    $user = auth()->user();
+    $room = $user->room;
+    dd($user);
     return view('test');
 })->name('test');
 Route::get('/livewire', function () {

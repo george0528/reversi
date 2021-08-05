@@ -18,6 +18,7 @@ class CreateBoardsTable extends Migration
             $table->integer('next_color')->default(1);
             $table->json('content')->nullable();
             $table->integer('status')->default(1);
+            $table->integer('winner')->nullable();
             $table->timestamps();
         });
     }
