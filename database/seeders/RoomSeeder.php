@@ -17,7 +17,12 @@ class RoomSeeder extends Seeder
     {
         DB::table('rooms')->truncate();
         DB::table('rooms')->insert([
-            'borad_id' => 1,
+            'board_id' => 1,
+            'mode_id' => 1,
+        ]);
+        DB::table('rooms')->insert([
+            'board_id' => 2,
+            'mode_id' => 2,
         ]);
     }
 }

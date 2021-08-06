@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 
-class BoradSeeder extends Seeder
+class BoardSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,9 +15,12 @@ class BoradSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('borads')->truncate();
-        DB::table('borads')->insert([
+        DB::table('boards')->truncate();
+        DB::table('boards')->insert([
             'id' => 1,
+        ]);
+        DB::table('boards')->insert([
+            'id' => 2,
         ]);
     }
 }

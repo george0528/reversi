@@ -1,10 +1,61 @@
+.displaynone {
+  display: none;
+}
+
+.test-white {
+  background-color: black;
+  padding: 10px;
+  color: white;
+}
+
+.pass {
+  display: none;
+}
+
+.pass.open {
+  display: block;
+}
+
+.finish {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+}
+
+.finish .winner {
+  color: white;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  position: absolute;
+  font-size: 5rem;
+}
+
+.finish #delete {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  font-size: 2rem;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.finish.open {
+  display: block;
+}
+
 .table {
   background-color: white;
 }
 
 .table td {
-  width: 60px;
-  height: 60px;
+  width: 75px;
+  height: 75px;
   background-color: #ddd;
   text-align: center;
   font-size: 3rem;
@@ -13,5 +64,175 @@
 
 .table td.white {
   font-size: 2.4rem;
+}
+
+.table td.next {
+  background-color: #efefef;
+}
+
+.table td.put {
+  background-color: skyblue;
+}
+
+.component_alert {
+  padding: 15px;
+  margin: 20px 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.component_alert.success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3c763d;
+}
+
+.component_alert.danger {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+.component_alert-a {
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.component_btn {
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.component_btn:hover {
+  opacity: 0.8;
+}
+
+.component_btn.primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.component_btn.danger {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.component_cover {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.component_cover.black {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.component_cover_child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 50px;
+}
+
+.component_load_circle {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  border-top: 5px solid black;
+  -webkit-animation: turn 0.7s linear infinite;
+          animation: turn 0.7s linear infinite;
+}
+
+@-webkit-keyframes turn {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes turn {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+.component_flash_text {
+  color: #000;
+  -webkit-animation: flash 1s linear infinite;
+          animation: flash 1s linear infinite;
+}
+
+@-webkit-keyframes flash {
+  0% {
+    color: black;
+  }
+  50% {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    color: rbga(black, 1);
+  }
+}
+
+@keyframes flash {
+  0% {
+    color: black;
+  }
+  50% {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    color: rbga(black, 1);
+  }
 }
 /*# sourceMappingURL=main.css.map */
