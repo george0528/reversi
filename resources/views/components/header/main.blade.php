@@ -1,5 +1,4 @@
 <header class="header">
-    <a href="{{ route('session_all') }}" class="component_btn danger">セッション情報</a>
     {{-- ログイン --}}
     @if (Route::has('login'))
     <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">

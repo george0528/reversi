@@ -11755,12 +11755,6 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'socket.io',
   host: 'http://localhost:6001'
 });
-var params = new URLSearchParams(location.search);
-var room_id = params.get('room_id');
-window.Echo.channel('laravel_database_private-match.' + room_id).listen('RoomEvent', function (e) {
-  console.log(e);
-  location.href = "http://localhost:8000/mode/online/room/battle";
-});
 })();
 
 /******/ })()

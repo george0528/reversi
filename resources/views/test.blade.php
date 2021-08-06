@@ -1,4 +1,4 @@
-@extends('layouts.livewire')
+@extends('layouts.main')
 @section('title', 'testページ')
 @section('content')
     

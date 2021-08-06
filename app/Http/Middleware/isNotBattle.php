@@ -4,9 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\Room;
 
-class isBattale
+class isNotBattle
 {
     /**
      * Handle an incoming request.
@@ -20,9 +19,9 @@ class isBattale
         $user = auth()->user();
         if(isset($user->room) && isset($user->room_id)) {
             if($user->room->is_battle == 1) {
-                return $next($request);
+                return redirect(route('index'));
             }
         }
-        return redirect(route('index'));
+        return $next($request);
     }
 }

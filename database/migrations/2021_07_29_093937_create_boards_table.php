@@ -15,9 +15,8 @@ class CreateBoardsTable extends Migration
     {
         Schema::create('boards', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('next_color')->default(1);
+            $table->integer('next_color')->default(1)->nullable();
             $table->json('content')->nullable();
-            $table->integer('status')->default(1);
             $table->integer('winner')->nullable();
             $table->timestamps();
         });

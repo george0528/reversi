@@ -23,9 +23,6 @@ class FinishEvent implements ShouldBroadcast
     public function __construct($content)
     {
         $this->content = $content;
-        $room = auth()->user()->room;
-        $room->is_battle = 0;
-        $room->save();
     }
 
     /**
@@ -42,6 +39,8 @@ class FinishEvent implements ShouldBroadcast
         $Logic = new RequestLogic;
         $results = $Logic->judge($this->content);
         $results['message'] = '終了しました';
+        $room = auth()->user()->room;
+        $room->finish($results['winner']);
         return $results;
     }
 }

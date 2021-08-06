@@ -47,10 +47,15 @@ class Board extends Component
         $this->room_id = $user->room_id;
         $room = new Room;
         $room = $room->find($this->room_id);
-        $this->content = $room->board->getContent();
-        $this->next_color = $room->board->next_color;
+        $board = $room->board;
+        $this->content = $board->getContent();
+        $this->next_color = $board->next_color;
         if($this->next_color == $this->color) {
             $this->nexts();
+        }
+        if(isset($board->winner)) {
+            $data = [$board->winner, 'すでに勝負は終わっています'];
+            $this->finish($data);
         }
     }
     public function put($i1, $i2) {
@@ -86,6 +91,16 @@ class Board extends Component
         $this->turn_next_color();
         $this->nexts();
     }
+    public function enemy_leave() {
+        $room = auth()->user()->room;
+        if(isset($room) && empty($room->board->winner)) {
+            $room->finish($this->color);
+            $this->finish([
+                'winner' => $this->color,
+                'message' => '敵が接続切れしました',
+            ]);
+        }
+    }
     public function nexts() {
         $Logic = new LivewireLogic;
         $nexts = $Logic->nexts($this->color, $this->content);
@@ -101,16 +116,13 @@ class Board extends Component
         $this->next_color = $this->color;
         $this->winner = $data['winner'];
         $this->finish_message = $data['message'];
-        if($this->winner == $this->color) {
-            $board = auth()->user()->room->board;
-            $board->winner = auth()->user()->id;
-            $board->save();
-        }
         $this->user_data_delete();
         $this->data_reset();
     }
     public function surrender() {
-        broadcast(new SurrenderEvent);
+        if($this->next_color == $this->color) {
+            broadcast(new SurrenderEvent);
+        }
     }
     public function finish_btn() {
         return redirect()->route('onlineList');
@@ -127,13 +139,6 @@ class Board extends Component
     public function turn_next_color() {
         $Logic = new RequestLogic;
         $this->next_color = $Logic->turnColor($this->next_color);
-    }
-    // プレゼンス チャンネル
-    public function enemy_leave() {
-        $this->finish([
-            'winner' => $this->color,
-            'message' => '敵が接続切れしました',
-        ]);
     }
     public function render()
     {

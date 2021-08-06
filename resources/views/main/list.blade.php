@@ -1,4 +1,4 @@
-@extends('layouts.livewire')
+@extends('layouts.main')
 @section('title', '待機画面')
 @section('content')
     @if (session('message'))

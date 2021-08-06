@@ -8,4 +8,5 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    @livewireStyles
 </head>

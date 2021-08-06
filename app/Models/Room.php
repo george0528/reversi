@@ -18,15 +18,8 @@ class Room extends Model
     }
     // 空きの部屋があるかどうか
     public function free() {
-        $board = new Board;
-        $content = $this->reset();
-        $b = $board->create([
-            'next_color' => 1,
-            'content' => $content,
-        ]);
         return $this->create([
             'is_battle' => 0,
-            'board_id' => $b->id,
         ]);
     }
     // オセロの最初の盤面
@@ -46,9 +39,16 @@ class Room extends Model
         if(empty($room)) {
             return null;
         }
+        $content = $this->reset();
+        $board = new Board;
+        $b = $board->create([
+            'next_color' => 1,
+            'content' => $content,
+        ]);
         $room->fill([
             'is_wait' => 0,
             'is_battle' => 1,
+            'board_id' => $b->id,
         ]);
         $room->save();
         $user = auth()->user();
@@ -67,6 +67,15 @@ class Room extends Model
             $user->color = $colors[$i];
             $user->save();
         }
+    }
+    // バトル終了処理　データリセット
+    public function finish($winner) {
+        $this->is_battle = 0;
+        $board = $this->board;
+        $board->next_color = null;
+        $board->winner = $winner;
+        $board->save();
+        $this->save();
     }
     // DB Boardテーブルに紐づけ
     public function board() {

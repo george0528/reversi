@@ -22,9 +22,7 @@ class SurrenderEvent implements ShouldBroadcast
      */
     public function __construct()
     {
-        $room = auth()->user()->room;
-        $room->is_battle = 0;
-        $room->save();
+        // 
     }
 
     /**
@@ -41,6 +39,8 @@ class SurrenderEvent implements ShouldBroadcast
         $Logic = new RequestLogic;
         $surrender_color = auth()->user()->color;
         $winner_color = $Logic->turnColor($surrender_color);
+        $room = auth()->user()->room;
+        $room->finish($winner_color);
         return [
             'winner' => $winner_color,
             'message' => '投了しました',

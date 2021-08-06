@@ -1,4 +1,4 @@
-@extends('layouts.livewire')
+@extends('layouts.main')
 @section('title', 'online')
 @section('content')
 <h1>ルーム状況</h1>

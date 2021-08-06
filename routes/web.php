@@ -38,20 +38,21 @@ Route::get('/reset', [MainController::class, 'reset'])->name('reset');
 
 // ログイン
 Route::group(['middleware' => ['auth']], function() {
-    Route::group(['middleware' => ['is_battle']], function() {
+    Route::group(['middleware' => ['is_not_battle']], function() {
         Route::get('/mode/online/list', [MainController::class, 'onlineList'])->name('onlineList');
         Route::post('/mode/online/room/join', [MainController::class, 'onlineJoin'])->name('onlineJoin');
         Route::post('/mode/online/create', [MainController::class, 'roomCreate'])->name('roomCreate');
     });
+    Route::get('/mode/online/room/battle', [MainController::class, 'onlineBattle'])->name('onlineBattle')->middleware('is_battle');
     Route::get('/mode/online/wait', [MainController::class, 'onlineWait'])->name('onlineWait');
     Route::post('/mode/online/room/leave', [MainController::class, 'onlineLeave'])->name('onlineLeave');
-    Route::get('/mode/online/room/battle', [MainController::class, 'onlineBattle'])->name('onlineBattle');
 });
 
 Route::get('/delete', function() {
     $user = auth()->user();
     $user->room_id = null;
     $user->save();
+    return redirect()->back();
 });
 Route::get('/test', function () {
     $user = auth()->user();
@@ -62,11 +63,6 @@ Route::get('/test', function () {
 Route::get('/livewire', function () {
     return view('main.livewire');
 })->name('livewire');
-Route::get('/session/all', function() {
-    $all = session()->all();
-    $id = session()->getId();
-    dd($all);
-})->name('session_all');
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');
