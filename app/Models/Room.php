@@ -74,14 +74,25 @@ class Room extends Model
         $board = $this->board;
         $board->next_color = null;
         $users = $this->users;
-        foreach($users as $user) {
-            if($user->color == $winner_color) {
-                $winner_user = $user->id;
-            }
+        $user_color_black = $this->search_user($users, 1);
+        $user_color_white = $this->search_user($users, 2);
+        if($winner_color == 1) {
+            $board->winner = $user_color_black->id;
+        } elseif($winner_color == 2) {
+            $board->winner = $user_color_white->id;
         }
-        $board->winner = $winner_user;
+        $board->user1 = $user_color_black->id;
+        $board->user2 = $user_color_white->id;
         $board->save();
         $this->save();
+    }
+    // ユーザーを探す
+    public function search_user($users,$color) {
+        foreach($users as $user) {
+            if($user->color == $color) {
+                return $user;
+            }
+        }
     }
     // DB Boardテーブルに紐づけ
     public function board() {

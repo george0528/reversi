@@ -73,6 +73,10 @@ class MainController extends Controller
         $room->destroy($room_id);
         return redirect()->route('onlineList');
     }
+    // 戦績
+    public function record() {
+        return view('main.record');
+    }
     // リセット
     public function reset(Room $room) {
         $reversi[3][3] = 1;

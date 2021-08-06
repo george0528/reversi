@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('/mode/online/create', [MainController::class, 'roomCreate'])->name('roomCreate');
     });
     Route::get('/mode/online/room/battle', [MainController::class, 'onlineBattle'])->name('onlineBattle')->middleware('is_battle');
+    Route::get('/user/profile/record', [MainController::class, 'record'])->name('record');
     Route::get('/mode/online/wait', [MainController::class, 'onlineWait'])->name('onlineWait');
     Route::post('/mode/online/room/leave', [MainController::class, 'onlineLeave'])->name('onlineLeave');
 });
