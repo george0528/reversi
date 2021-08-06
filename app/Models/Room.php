@@ -69,11 +69,17 @@ class Room extends Model
         }
     }
     // バトル終了処理　データリセット
-    public function finish($winner) {
+    public function finish($winner_color) {
         $this->is_battle = 0;
         $board = $this->board;
         $board->next_color = null;
-        $board->winner = $winner;
+        $users = $this->users;
+        foreach($users as $user) {
+            if($user->color == $winner_color) {
+                $winner_user = $user->id;
+            }
+        }
+        $board->winner = $winner_user;
         $board->save();
         $this->save();
     }
