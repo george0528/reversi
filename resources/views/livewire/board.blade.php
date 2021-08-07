@@ -90,6 +90,10 @@
         </tr>
         @endfor
     </table>
+    {{-- 時間切れ --}}
+    @isset($has_time)
+        <div wire:poll.{{ $has_time }}s="time_over" class=""></div>
+    @endisset
     <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
     @isset($pass)
         <button wire:click="pass" class="component_btn primary">パス</button>

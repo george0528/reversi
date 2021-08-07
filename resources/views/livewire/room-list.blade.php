@@ -1,4 +1,4 @@
-<div wire:poll.5000ms>
+<div wire:poll.3s>
     {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
     {{-- <div wire:loading.class="displaynone" class="component_load_circle"></div> --}}
     <div class="component_flash_text">自動更新中…</div>

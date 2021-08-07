@@ -21,13 +21,13 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('room_id')->nullable();
             $table->integer('color')->nullable();
+            $table->integer('time')->nullable();
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      *

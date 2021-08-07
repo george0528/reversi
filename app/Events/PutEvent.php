@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Logic\LivewireLogic;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -21,10 +22,15 @@ class PutEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($puttedCoord, $content)
+    public function __construct($puttedCoord, $content, $start_time)
     {
         $this->puttedCoord = $puttedCoord;
         $this->content = $content;
+        $Logic = new LivewireLogic;
+        $user = auth()->user();
+        $time = $Logic->diff_time($start_time, $user->time);
+        $user->time = $time;
+        $user->save();
     }
 
     /**

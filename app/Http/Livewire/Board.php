@@ -26,6 +26,8 @@ class Board extends Component
     public $next_color;
     public $finish_message;
     public $enemy = false;
+    public $has_time;
+    public $start_time;
     // リスナー(websocketを含む)
     public function getListeners() {
         $events = [
@@ -37,7 +39,6 @@ class Board extends Component
             "echo-presence:presence.{$this->room_id},joining" => 'enemy_join',
             "echo-presence:presence.{$this->room_id},leaving" => 'enemy_leave',
             // "echo-presence:presence.{$this->room_id},listen, PresenceEvent" => 'p_listen',
-            'reload',
             'put', // 消す
             'pass', // 消す
         ];
@@ -64,10 +65,14 @@ class Board extends Component
         } else {
             $this->data_reset();
             $this->content = $results['content'];
-            broadcast(new PutEvent([$i1, $i2], $this->content))->toOthers();
+            $this->has_time = null;
+            broadcast(new PutEvent([$i1, $i2], $this->content, $this->start_time))->toOthers();
             $this->turn_next_color();
             if($results['finish']) {
-                broadcast(new FinishEvent($this->content));
+                $data = [
+                    'content' => $this->content,
+                ];
+                broadcast(new FinishEvent($data));
             }
         }
     }
@@ -75,7 +80,8 @@ class Board extends Component
         $this->data_reset();
         $Logic = new LivewireLogic;
         $Logic->pass($this->color);
-        broadcast(new PassEvent)->toOthers();
+        $this->has_time = null;
+        broadcast(new PassEvent($this->start_time))->toOthers();
         $this->turn_next_color();
     }
     public function enemy_putted($data) {
@@ -90,6 +96,7 @@ class Board extends Component
     }
     public function enemy_join() {
         $this->enemy = true;
+        $this->set_times();
     }
     public function enemy_leave() {
         $room = auth()->user()->room;
@@ -111,6 +118,8 @@ class Board extends Component
             $this->nexts = $nexts;
             $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
         }
+        // 時間
+        $this->set_times();
     }
     public function finish($data) {
         $this->next_color = $this->color;
@@ -131,6 +140,7 @@ class Board extends Component
         } else {
             $this->enemy = true;
             sleep(1);
+            $this->set_times();
             $room = auth()->user()->room;
             if(isset($room->board->winner)) {
                 $winner_color = $this->winner_color($room->board->winner, $room->board);
@@ -164,25 +174,32 @@ class Board extends Component
             $room->save();
         }
     }
-    public function reload() {
-        $Logic = new RequestLogic;
-        $winner = $Logic->turnColor($this->color);
-        $data = [
-            'winner' => $winner,
-            'message' => '接続切れであなたの負けです',
-        ];
-        $this->finish($data);
+    public function time_over() {
+        $room = auth()->user()->room;
+        // 勝負が決まっていなかったら
+        if(empty($room->board->winner)) {
+            $Logic = new RequestLogic;
+            $winner_color = $Logic->turnColor($this->color);
+            $data = [
+                'flag' => true,
+                'winner' => $winner_color,
+                'message' => '時間切れで終了です',
+            ];
+            broadcast(new FinishEvent($data));
+        }
+        $this->has_time = null;
     }
     public function finish_btn() {
         return redirect()->route('onlineList');
     }
     public function data_reset() {
-        $this->reset(['message', 'nexts', 'pass']);
+        $this->reset(['message', 'nexts', 'pass', 'has_time']);
     }
     public function user_data_delete() {
         $user = auth()->user();
         $user->room_id = null;
         $user->color = null;
+        $user->time = null;
         $user->save();
     }
     public function turn_next_color() {
@@ -196,6 +213,14 @@ class Board extends Component
             $winner_color = 2;
         }
         return $winner_color;
+    }
+    public function set_times() {
+        if(isset($this->color) && isset($this->next_color)) {
+            if($this->color == $this->next_color) {
+                $this->has_time = auth()->user()->time;
+                $this->start_time = time();
+            }
+        }
     }
     public function render()
     {

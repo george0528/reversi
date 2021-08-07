@@ -29,6 +29,7 @@ class User extends Authenticatable
         'email',
         'password',
         'color',
+        'time',
         'room_id',
     ];
 
@@ -65,6 +66,7 @@ class User extends Authenticatable
         $user = auth()->user();
         $room_id = $room->id;
         $user->room_id = $room_id;
+        $user->time = 60;
         $user->save();
     }
     // DB Roomに紐づけ
