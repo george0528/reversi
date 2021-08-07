@@ -16,11 +16,20 @@
         <div class="component_cover black">
             <div class="component_cover_child">
                 <p>{{ $finish_message }}</p>
-                <p>勝者は{{ $winner }}</p>
+                <p>勝者：{{ $winner }}</p>
                 <button wire:click="finish_btn" class="component_btn danger">終了</button>
             </div>
         </div>
     @endisset
+    {{-- 相手待ち --}}
+    @empty($enemy)
+        <div wire:poll.5000ms="no_enemy" class="component_cover black">
+            <div class="component_cover_child">
+                <p>対戦相手と接続中</p>
+                <div class="component_load_circle"></div>
+            </div>
+        </div>
+    @endempty
     {{-- next_color --}}
     @if ($next_color != $color)
         <div class="component_cover black"></div>

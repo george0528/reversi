@@ -5,10 +5,6 @@ namespace App\Http\Logic;
 use function PHPUnit\Framework\callback;
 
 class RequestLogic {
-    // test
-    public function test() {
-        return 'a';
-    }
     // 複数の関数をまとめた関数
     // 置ける場合のチェック
     public function check($i1,$i2,$content,$color) {

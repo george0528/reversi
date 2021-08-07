@@ -10,6 +10,7 @@ use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WebsocketController;
+use App\Models\Board;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -55,10 +56,14 @@ Route::get('/delete', function() {
     $user->save();
     return redirect()->back();
 });
-Route::get('/test', function () {
-    $user = auth()->user();
-    $room = $user->room;
-    dd($user);
+Route::get('/room', function (Room $room) {
+    $room = $room->all();
+    dd($room);
+    return view('test');
+})->name('room');
+Route::get('/board', function (Board $board) {
+    $board = $board->all();
+    dd($board);
     return view('test');
 })->name('test');
 Route::get('/livewire', function () {

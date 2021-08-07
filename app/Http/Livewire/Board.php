@@ -25,6 +25,7 @@ class Board extends Component
     public $winner;
     public $next_color;
     public $finish_message;
+    public $enemy = false;
     // リスナー(websocketを含む)
     public function getListeners() {
         return [
@@ -32,8 +33,8 @@ class Board extends Component
             "echo:laravel_database_private-battle.{$this->room_id},PassEvent" => 'enemy_pass',
             "echo:laravel_database_private-battle.{$this->room_id},FinishEvent" => 'finish',
             "echo:laravel_database_private-battle.{$this->room_id},SurrenderEvent" => 'finish',
-            // "echo-presence:presence.{$this->room_id},here" => 'presence_action',
-            // "echo-presence:presence.{$this->room_id},joining" => 'presence_action',
+            "echo-presence:presence.{$this->room_id},here" => 'here',
+            "echo-presence:presence.{$this->room_id},joining" => 'enemy_join',
             "echo-presence:presence.{$this->room_id},leaving" => 'enemy_leave',
             // "echo-presence:presence.{$this->room_id},listen, PresenceEvent" => 'p_listen',
             'put', // 消す
@@ -45,17 +46,11 @@ class Board extends Component
         $user = auth()->user();
         $this->color = $user->color;
         $this->room_id = $user->room_id;
-        $room = new Room;
-        $room = $room->find($this->room_id);
-        $board = $room->board;
+        $board = $user->room->board;
         $this->content = $board->getContent();
         $this->next_color = $board->next_color;
         if($this->next_color == $this->color) {
             $this->nexts();
-        }
-        if(isset($board->winner)) {
-            $data = [$board->winner, 'すでに勝負は終わっています'];
-            $this->finish($data);
         }
     }
     public function put($i1, $i2) {
@@ -70,7 +65,11 @@ class Board extends Component
             broadcast(new PutEvent([$i1, $i2], $this->content))->toOthers();
             $this->turn_next_color();
             if($results['finish']) {
-                broadcast(new FinishEvent($this->content));
+                $data = [
+                    'flag' => false,
+                    'content' => $this->content,
+                ];
+                broadcast(new FinishEvent($data));
             }
         }
     }
@@ -91,6 +90,9 @@ class Board extends Component
         $this->turn_next_color();
         $this->nexts();
     }
+    public function enemy_join() {
+        $this->enemy = true;
+    }
     public function enemy_leave() {
         $room = auth()->user()->room;
         if(isset($room) && empty($room->board->winner)) {
@@ -109,7 +111,7 @@ class Board extends Component
             // $this->emit('pass'); // 消す
         } else {
             $this->nexts = $nexts;
-            $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
+            // $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
         }
     }
     public function finish($data) {
@@ -124,11 +126,39 @@ class Board extends Component
             broadcast(new SurrenderEvent);
         }
     }
+    // プレゼンスチャンネル設定
+    public function here($users) {
+        if(count($users) == 1) {
+            $this->enemy = false;
+        } else {
+            $this->enemy = true;
+        }
+    }
+    public function no_enemy() {
+        if(empty($this->enemy)) {
+            $room = auth()->user()->room;
+            if(isset($room->board->winner)) {
+                $data = [$room->board->winner, 'すでに勝負は終わっています'];
+            } else {
+                $data = ['引き分け', '相手の通信エラーのため引き分け'];
+            }
+            $finish_data = [
+                'winner' => $data[0],
+                'message' => $data[1],
+            ];
+            $this->enemy = true;
+            $this->finish($finish_data);
+            // room削除処理
+            $room->is_battle = 0;
+            $room->save();
+        }
+    }
     public function finish_btn() {
         return redirect()->route('onlineList');
     }
     public function data_reset() {
         $this->reset(['message', 'nexts', 'pass']);
+        // プレゼンスチャンネルからleave
     }
     public function user_data_delete() {
         $user = auth()->user();
