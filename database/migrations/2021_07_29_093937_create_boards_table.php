@@ -17,6 +17,8 @@ class CreateBoardsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('next_color')->default(1)->nullable();
             $table->json('content')->nullable();
+            $table->integer('user1')->nullable();
+            $table->integer('user2')->nullable();
             $table->integer('winner')->nullable();
             $table->timestamps();
         });

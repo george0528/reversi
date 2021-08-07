@@ -69,13 +69,30 @@ class Room extends Model
         }
     }
     // バトル終了処理　データリセット
-    public function finish($winner) {
+    public function finish($winner_color) {
         $this->is_battle = 0;
         $board = $this->board;
         $board->next_color = null;
-        $board->winner = $winner;
+        $users = $this->users;
+        $user_color_black = $this->search_user($users, 1);
+        $user_color_white = $this->search_user($users, 2);
+        if($winner_color == 1) {
+            $board->winner = $user_color_black->id;
+        } elseif($winner_color == 2) {
+            $board->winner = $user_color_white->id;
+        }
+        $board->user1 = $user_color_black->id;
+        $board->user2 = $user_color_white->id;
         $board->save();
         $this->save();
+    }
+    // ユーザーを探す
+    public function search_user($users,$color) {
+        foreach($users as $user) {
+            if($user->color == $color) {
+                return $user;
+            }
+        }
     }
     // DB Boardテーブルに紐づけ
     public function board() {
