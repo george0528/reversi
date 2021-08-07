@@ -13,10 +13,19 @@
     @endphp
     {{-- 勝者 --}}
     @isset($winner)
+        @php
+            if($winner == $color) {
+                $judge = '勝ち';
+            } elseif ($winner == 3) {
+                $judge = '引き分け';
+            } else {
+                $judge = '負け';
+            }
+        @endphp
         <div class="component_cover black">
             <div class="component_cover_child">
                 <p>{{ $finish_message }}</p>
-                <p>勝者：{{ $winner }}</p>
+                <p>勝敗：{{ $judge }}</p>
                 <button wire:click="finish_btn" class="component_btn danger">終了</button>
             </div>
         </div>

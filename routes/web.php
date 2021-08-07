@@ -57,12 +57,12 @@ Route::get('/delete', function() {
     return redirect()->back();
 });
 Route::get('/room', function (Room $room) {
-    $room = $room->all();
+    $room = $room->find(84);
     dd($room);
     return view('test');
 })->name('room');
 Route::get('/board', function (Board $board) {
-    $board = $board->all();
+    $board = $board->find(80);
     dd($board);
     return view('test');
 })->name('test');

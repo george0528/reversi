@@ -14,15 +14,15 @@ use Illuminate\Queue\SerializesModels;
 class FinishEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $data = [];
+    public $content = [];
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($content)
     {
-        $this->data = $data;
+        $this->content = $content;
     }
 
     /**
@@ -38,16 +38,9 @@ class FinishEvent implements ShouldBroadcast
     public function broadcastWith() {
         $Logic = new RequestLogic;
         $room = auth()->user()->room;
-        if(isset($this->data['flag'])) {
-            $results['winner'] = $this->data['winner'];
-            $results['counts'] = null;
-            $results['message'] = $this->data['message'];
-            $room->finish($this->data['winner']);
-        } else {
-            $results = $Logic->judge($this->data['content']);
+            $results = $Logic->judge($this->content );
             $results['message'] = '終了しました';
             $room->finish($results['winner']);
-        }
         return $results;
     }
 }

@@ -28,7 +28,7 @@ class Board extends Component
     public $enemy = false;
     // リスナー(websocketを含む)
     public function getListeners() {
-        return [
+        $events = [
             "echo:laravel_database_private-battle.{$this->room_id},PutEvent" => 'enemy_putted',
             "echo:laravel_database_private-battle.{$this->room_id},PassEvent" => 'enemy_pass',
             "echo:laravel_database_private-battle.{$this->room_id},FinishEvent" => 'finish',
@@ -37,9 +37,11 @@ class Board extends Component
             "echo-presence:presence.{$this->room_id},joining" => 'enemy_join',
             "echo-presence:presence.{$this->room_id},leaving" => 'enemy_leave',
             // "echo-presence:presence.{$this->room_id},listen, PresenceEvent" => 'p_listen',
+            'reload',
             'put', // 消す
             'pass', // 消す
         ];
+        return $events;
     }
     public function mount()
     {
@@ -65,11 +67,7 @@ class Board extends Component
             broadcast(new PutEvent([$i1, $i2], $this->content))->toOthers();
             $this->turn_next_color();
             if($results['finish']) {
-                $data = [
-                    'flag' => false,
-                    'content' => $this->content,
-                ];
-                broadcast(new FinishEvent($data));
+                broadcast(new FinishEvent($this->content));
             }
         }
     }
@@ -111,7 +109,7 @@ class Board extends Component
             // $this->emit('pass'); // 消す
         } else {
             $this->nexts = $nexts;
-            // $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
+            $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
         }
     }
     public function finish($data) {
@@ -132,15 +130,28 @@ class Board extends Component
             $this->enemy = false;
         } else {
             $this->enemy = true;
+            sleep(1);
+            $room = auth()->user()->room;
+            if(isset($room->board->winner)) {
+                $winner_color = $this->winner_color($room->board->winner, $room->board);
+                $data = [$winner_color, '接続切れであなたの負けです'];
+                $finish_data = [
+                    'winner' => $data[0],
+                    'message' => $data[1],
+                ];
+                $this->enemy = true;
+                $this->finish($finish_data);
+            }
         }
     }
     public function no_enemy() {
         if(empty($this->enemy)) {
             $room = auth()->user()->room;
             if(isset($room->board->winner)) {
-                $data = [$room->board->winner, 'すでに勝負は終わっています'];
+                $winner_color = $this->winner_color($room->board->winner, $room->board);
+                $data = [$winner_color, 'すでに勝負は終わっています'];
             } else {
-                $data = ['引き分け', '相手の通信エラーのため引き分け'];
+                $data = [3 , '相手の通信エラーのため引き分け'];
             }
             $finish_data = [
                 'winner' => $data[0],
@@ -153,12 +164,20 @@ class Board extends Component
             $room->save();
         }
     }
+    public function reload() {
+        $Logic = new RequestLogic;
+        $winner = $Logic->turnColor($this->color);
+        $data = [
+            'winner' => $winner,
+            'message' => '接続切れであなたの負けです',
+        ];
+        $this->finish($data);
+    }
     public function finish_btn() {
         return redirect()->route('onlineList');
     }
     public function data_reset() {
         $this->reset(['message', 'nexts', 'pass']);
-        // プレゼンスチャンネルからleave
     }
     public function user_data_delete() {
         $user = auth()->user();
@@ -169,6 +188,14 @@ class Board extends Component
     public function turn_next_color() {
         $Logic = new RequestLogic;
         $this->next_color = $Logic->turnColor($this->next_color);
+    }
+    public function winner_color($winner, $board) {
+        if($board->user1 == $winner) {
+            $winner_color = 1;
+        } elseif($board->user2 == $winner) {
+            $winner_color = 2;
+        }
+        return $winner_color;
     }
     public function render()
     {

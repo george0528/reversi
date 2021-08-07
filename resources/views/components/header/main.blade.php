@@ -1,3 +1,4 @@
+<body>
 <header class="header">
     {{-- ログイン --}}
     @if (Route::has('login'))
