@@ -11,6 +11,7 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WebsocketController;
 use App\Models\Board;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -57,18 +58,23 @@ Route::get('/delete', function() {
     return redirect()->back();
 });
 Route::get('/room', function (Room $room) {
-    $room = $room->all();
+    $room = $room->find(84);
     dd($room);
     return view('test');
 })->name('room');
 Route::get('/board', function (Board $board) {
-    $board = $board->all();
+    $board = $board->find(80);
     dd($board);
     return view('test');
 })->name('test');
 Route::get('/livewire', function () {
     return view('main.livewire');
 })->name('livewire');
+Route::get('/time', function() {
+$now = time();
+$last_time = 1628355165;
+    dd(time() - $last_time);
+});
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');

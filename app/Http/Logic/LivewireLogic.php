@@ -55,4 +55,9 @@ Class LivewireLogic {
             return array_column($nexts['coords'], 'coord');
         }
     }
+    public function diff_time($action_start_time, $has_time) {
+        $action_time = time() - $action_start_time;
+        $time = $has_time - $action_time;
+        return $time;
+    }
 }

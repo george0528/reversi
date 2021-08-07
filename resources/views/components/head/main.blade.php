@@ -9,4 +9,5 @@
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     @livewireStyles
+    @livewireScripts
 </head>

@@ -40,7 +40,7 @@ class FinishEvent implements ShouldBroadcast
         $room = auth()->user()->room;
         if(isset($this->data['flag'])) {
             $results['winner'] = $this->data['winner'];
-            $results['counts'] = null;
+            $results['count'] = null;
             $results['message'] = $this->data['message'];
             $room->finish($this->data['winner']);
         } else {

@@ -26,9 +26,11 @@ class Board extends Component
     public $next_color;
     public $finish_message;
     public $enemy = false;
+    public $has_time;
+    public $start_time;
     // リスナー(websocketを含む)
     public function getListeners() {
-        return [
+        $events = [
             "echo:laravel_database_private-battle.{$this->room_id},PutEvent" => 'enemy_putted',
             "echo:laravel_database_private-battle.{$this->room_id},PassEvent" => 'enemy_pass',
             "echo:laravel_database_private-battle.{$this->room_id},FinishEvent" => 'finish',
@@ -40,6 +42,7 @@ class Board extends Component
             'put', // 消す
             'pass', // 消す
         ];
+        return $events;
     }
     public function mount()
     {
@@ -62,11 +65,11 @@ class Board extends Component
         } else {
             $this->data_reset();
             $this->content = $results['content'];
-            broadcast(new PutEvent([$i1, $i2], $this->content))->toOthers();
+            $this->has_time = null;
+            broadcast(new PutEvent([$i1, $i2], $this->content, $this->start_time))->toOthers();
             $this->turn_next_color();
             if($results['finish']) {
                 $data = [
-                    'flag' => false,
                     'content' => $this->content,
                 ];
                 broadcast(new FinishEvent($data));
@@ -77,7 +80,8 @@ class Board extends Component
         $this->data_reset();
         $Logic = new LivewireLogic;
         $Logic->pass($this->color);
-        broadcast(new PassEvent)->toOthers();
+        $this->has_time = null;
+        broadcast(new PassEvent($this->start_time))->toOthers();
         $this->turn_next_color();
     }
     public function enemy_putted($data) {
@@ -92,6 +96,7 @@ class Board extends Component
     }
     public function enemy_join() {
         $this->enemy = true;
+        $this->set_times();
     }
     public function enemy_leave() {
         $room = auth()->user()->room;
@@ -111,8 +116,10 @@ class Board extends Component
             // $this->emit('pass'); // 消す
         } else {
             $this->nexts = $nexts;
-            // $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
+            $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
         }
+        // 時間
+        $this->set_times();
     }
     public function finish($data) {
         $this->next_color = $this->color;
@@ -132,15 +139,29 @@ class Board extends Component
             $this->enemy = false;
         } else {
             $this->enemy = true;
+            sleep(1);
+            $this->set_times();
+            $room = auth()->user()->room;
+            if(isset($room->board->winner)) {
+                $winner_color = $this->winner_color($room->board->winner, $room->board);
+                $data = [$winner_color, '接続切れであなたの負けです'];
+                $finish_data = [
+                    'winner' => $data[0],
+                    'message' => $data[1],
+                ];
+                $this->enemy = true;
+                $this->finish($finish_data);
+            }
         }
     }
     public function no_enemy() {
         if(empty($this->enemy)) {
             $room = auth()->user()->room;
             if(isset($room->board->winner)) {
-                $data = [$room->board->winner, 'すでに勝負は終わっています'];
+                $winner_color = $this->winner_color($room->board->winner, $room->board);
+                $data = [$winner_color, 'すでに勝負は終わっています'];
             } else {
-                $data = ['引き分け', '相手の通信エラーのため引き分け'];
+                $data = [3 , '相手の通信エラーのため引き分け'];
             }
             $finish_data = [
                 'winner' => $data[0],
@@ -153,22 +174,53 @@ class Board extends Component
             $room->save();
         }
     }
+    public function time_over() {
+        $room = auth()->user()->room;
+        // 勝負が決まっていなかったら
+        if(empty($room->board->winner)) {
+            $Logic = new RequestLogic;
+            $winner_color = $Logic->turnColor($this->color);
+            $data = [
+                'flag' => true,
+                'winner' => $winner_color,
+                'message' => '時間切れで終了です',
+            ];
+            broadcast(new FinishEvent($data));
+        }
+        $this->has_time = null;
+    }
     public function finish_btn() {
         return redirect()->route('onlineList');
     }
     public function data_reset() {
-        $this->reset(['message', 'nexts', 'pass']);
-        // プレゼンスチャンネルからleave
+        $this->reset(['message', 'nexts', 'pass', 'has_time']);
     }
     public function user_data_delete() {
         $user = auth()->user();
         $user->room_id = null;
         $user->color = null;
+        $user->time = null;
         $user->save();
     }
     public function turn_next_color() {
         $Logic = new RequestLogic;
         $this->next_color = $Logic->turnColor($this->next_color);
+    }
+    public function winner_color($winner, $board) {
+        if($board->user1 == $winner) {
+            $winner_color = 1;
+        } elseif($board->user2 == $winner) {
+            $winner_color = 2;
+        }
+        return $winner_color;
+    }
+    public function set_times() {
+        if(isset($this->color) && isset($this->next_color)) {
+            if($this->color == $this->next_color) {
+                $this->has_time = auth()->user()->time;
+                $this->start_time = time();
+            }
+        }
     }
     public function render()
     {
