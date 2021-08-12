@@ -32,12 +32,16 @@ class MainController extends Controller
     }
     // ルーム作成
     public function roomCreate(Room $room, Request $request, User $user) {
+        $mode_id = $request->mode_id;
+        if($mode_id != 3 && $mode_id != 4) {
+            return redirect()->route('onlineList');
+        }
         // ルームを作成
         $room = $room->free();
         // 状態を変更
         $room = $room->fill([
             'is_wait' => 1,
-            'mode_id' => 3,
+            'mode_id' => $mode_id,
         ]);
         $room->save();
         $user = $user->join_room($room);

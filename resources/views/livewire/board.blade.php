@@ -45,6 +45,7 @@
     @endif
     <button wire:click="surrender" class="component_btn danger">投了</button>
     <h1>あなたの色は{{ $color_txt }}</h1>
+    <h1>残り時間：<span>{{ $has_time }}</span></h1>
     {{-- @foreach ($users as $user)
         @if ($user->id == )
             
