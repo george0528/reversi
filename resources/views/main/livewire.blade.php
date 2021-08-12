@@ -1,5 +1,5 @@
 @extends('layouts.main')
 @section('title', 'livewireページ')
 @section('content')
-    @livewire('board')
+    @livewire('two-choices-board')
 @endsection

@@ -8,6 +8,10 @@
     <h2>ルーム作成</h2>
     <form action="{{ route('roomCreate') }}" method="post">
         @csrf
+        <select name="mode_id" id="">
+            <option value="3">ノーマルオセロ</option>
+            <option value="4">二択オセロ</option>
+        </select>
         <button type="submit">作成</button>
     </form>
     @livewire('room-list')

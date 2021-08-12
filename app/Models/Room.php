@@ -14,7 +14,7 @@ class Room extends Model
     ];
     // 対戦待ち
     public function waitRooms() {
-        return $this->where('is_battle', 0)->where('is_wait', 1)->where('mode_id', 3)->get();
+        return $this->where('is_battle', 0)->where('is_wait', 1)->whereBetween('mode_id', [3,4])->get();
     }
     // 空きの部屋があるかどうか
     public function free() {

@@ -10,6 +10,7 @@ Class LivewireLogic {
         $rLogic = new RequestLogic;
         $room = new Room;
         $room = $room->find($room_id);
+        $mode_id = $room->mode_id;
         $board = $room->board;
         $content = $board->getContent();
         $next_color = $board->next_color;
@@ -21,6 +22,21 @@ Class LivewireLogic {
         }
         // 置けるかチェック
         $changes = $rLogic->check($i1, $i2, $content, $color);
+        // 二択かどうかチェック
+        if($mode_id === 4) {
+            $next_put_coords = $board->next_put_coords;
+            $next_flag = false;
+            foreach($next_put_coords as $next_cooard) {
+                if($next_cooard === [$i1, $i2]) {
+                    $next_cooard = true;
+                }
+            }
+            if(!$next_flag) {
+                return [
+                    'problem' => true,
+                ];
+            }
+        }
         // 置けない場合
         if(empty($changes)) {
             return [

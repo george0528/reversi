@@ -18,6 +18,7 @@ class Board extends Component
     public $puttedCoord = [];
     public $color;
     public $room_id;
+    public $mode_id;
     public $message;
     public $content;
     public $nexts;
@@ -49,6 +50,7 @@ class Board extends Component
         $user = auth()->user();
         $this->color = $user->color;
         $this->room_id = $user->room_id;
+        $this->mode_id = $user->room->mode_id;
         $board = $user->room->board;
         $this->content = $board->getContent();
         $this->next_color = $board->next_color;
@@ -203,8 +205,7 @@ class Board extends Component
         $user->save();
     }
     public function turn_next_color() {
-        $Logic = new RequestLogic;
-        $this->next_color = $Logic->turnColor($this->next_color);
+        $this->next_color = auth()->user()->room->board->next_color;
     }
     public function winner_color($winner, $board) {
         if($board->user1 == $winner) {

@@ -19,8 +19,8 @@ class Board extends Model
     // 盤面を更新する (新)
     public function updateContent($content, $color) {
         $content = json_encode($content);
-        $next_color = $this->turnColor($color);
-        return $this->fill(['content' => $content,'next_color' => $next_color])->save();
+        $this->changeNextColor($color);
+        return $this->fill(['content' => $content])->save();
     }
     // 盤面の配列をとる
     public function getContent() {
@@ -28,6 +28,7 @@ class Board extends Model
     }
     public function changeNextColor($color) {
         $next_color = $this->turnColor($color);
+        // next_coordsを求める処理を書く
         return $this->fill(['next_color' => $next_color])->save();
     }
     // 色の反転
