@@ -19,13 +19,9 @@ class PassEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($start_time)
+    public function __construct()
     {
-        $Logic = new LivewireLogic;
-        $user = auth()->user();
-        $time = $Logic->diff_time($start_time, $user->time);
-        $user->time = $time;
-        $user->save();
+        // 
     }
 
     /**

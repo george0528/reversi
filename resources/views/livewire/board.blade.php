@@ -45,7 +45,48 @@
     @endif
     <button wire:click="surrender" class="component_btn danger">投了</button>
     <h1>あなたの色は{{ $color_txt }}</h1>
-    <h1>残り時間：<span>{{ $has_time }}</span></h1>
+        <h1>あなたの残り時間：<span class="my_time">{{ $has_time }}</span></h1>
+        <h1>相手の残り時間：<span class="enemy_time">{{ $enemy_has_time }}</span></h1>
+    {{-- @isset($start_time)
+        <div wire:poll.1000ms.keep-alive="timer"></div>
+    @endisset --}}
+    <script>
+        var count_flag = false;
+        var count_time;
+        const start_count_time = ($elem) => {
+            count_flag = true;
+            count_time = setInterval(() => {
+                $elem_time = Number($elem.textContent);
+                if($elem_time == 0) {
+                    clearInterval(count_time);
+                } else {
+                    $elem.textContent = $elem_time - 1;
+                }
+            }, 1000, $elem);
+        }
+        Livewire.on('js_times', (data) => {
+            // 関数定義
+            const stopTimer = () =>{
+                if(count_flag) {
+                    clearInterval(count_time);
+                }
+            }
+            // 止める
+            stopTimer();
+            // 変数
+            var $my_time = document.querySelector('.my_time');
+            var $enemy_time = document.querySelector('.enemy_time');
+            $my_time.textContent = data['my_time'];
+            $enemy_time.textContent = data['enemy_time'];
+            var $count_time;
+            if(data['my_turn']) {
+                $count_time = $my_time;
+            } else {
+                $count_time = $enemy_time;
+            }
+            start_count_time($count_time);
+        })
+    </script>
     {{-- @foreach ($users as $user)
         @if ($user->id == )
             
@@ -92,8 +133,8 @@
         @endfor
     </table>
     {{-- 時間切れ --}}
-    @isset($has_time)
-        <div wire:poll.{{ $has_time }}s="time_over" class=""></div>
+    @isset($start_time)
+        <div wire:poll.keep-alive.{{ $has_time }}s="time_over" class=""></div>
     @endisset
     <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
     @isset($pass)
