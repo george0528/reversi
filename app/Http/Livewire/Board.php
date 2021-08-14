@@ -78,23 +78,27 @@ class Board extends Component
                 broadcast(new FinishEvent($data));
             }
         }
+        $this->nexts();
     }
     public function pass() {
         $this->data_reset();
         $Logic = new LivewireLogic;
         $Logic->pass($this->color);
         broadcast(new PassEvent())->toOthers();
-        update_time();
+        $this->update_time();
         $this->turn_next_color();
+        $this->nexts();
     }
     public function enemy_putted($data) {
         $this->content = $data['content'];
         $this->puttedCoord = $data['puttedCoord'];
         $this->turn_next_color();
+        $this->set_times();
         $this->nexts();
     }
     public function enemy_pass() {
         $this->turn_next_color();
+        $this->set_times();
         $this->nexts();
     }
     public function enemy_join() {
@@ -116,16 +120,15 @@ class Board extends Component
     }
     public function nexts() {
         $Logic = new LivewireLogic;
-        $nexts = $Logic->nexts($this->color, $this->content);
+        $nexts = $Logic->next_nexts($this->next_color, $this->content);
         if(empty($nexts)) {
             $this->pass = true;
+            $this->reset(['nexts']);
             // $this->emit('pass'); // 消す
         } else {
             $this->nexts = $nexts;
             // $this->emit('put',$this->nexts[0][0], $this->nexts[0][1]); // 消す
         }
-        // 時間
-        $this->set_times();
     }
     public function finish($data) {
         $this->next_color = $this->color;
@@ -146,7 +149,6 @@ class Board extends Component
         } else {
             $this->enemy = true;
             sleep(1);
-            $this->set_times();
             $room = auth()->user()->room;
             if(isset($room->board->winner)) {
                 $winner_color = $this->winner_color($room->board->winner, $room->board);
@@ -157,6 +159,8 @@ class Board extends Component
                 ];
                 $this->enemy = true;
                 $this->finish($finish_data);
+            } else {
+                $this->set_times();
             }
         }
     }
@@ -227,8 +231,6 @@ class Board extends Component
     public function set_times() {
         if(isset($this->color) && isset($this->next_color)) {
             $this->has_time = auth()->user()->time;
-            $users_times = $this->get_users_times();
-            $this->emit('js_times', $users_times);
             if($this->color == $this->next_color) {
                 $this->start_time = time();
             }

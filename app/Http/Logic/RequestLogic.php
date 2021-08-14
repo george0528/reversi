@@ -39,8 +39,8 @@ class RequestLogic {
     // 隣接の色とその反対側に自分のコマがあるかチェック　セカンドチェック
     public function secondcheck($i1,$i2,$content,$color) {
         // 座標をマイナス1する事で 置かれた場所の左端からスタート
-        $origI1 = $i1;
-        $origI2 = $i2;
+        $originI1 = $i1;
+        $originI2 = $i2;
         $i1--;
         $i2--;
         $count = 0;
@@ -51,7 +51,7 @@ class RequestLogic {
             for ($childI=0; $childI < 3; $childI++) { 
                 // 自分の色と違う時
                 if(isset($content[$i1][$i2]) && $content[$i1][$i2] != $color) {
-                    $diffs = $this->diff($i1,$i2,$origI1,$origI2);
+                    $diffs = $this->diff($i1,$i2,$originI1,$originI2);
                     $data = $this->pick($i1,$i2,$content,$diffs,$color);
                     // フラッグがtrueの時
                     if($data['f']) {
@@ -86,12 +86,10 @@ class RequestLogic {
         return $json;
     }
     // 次に置ける場所の座標を取得
-    public function nextCoords($color,$content) {
+    public function nextCoords($next_color,$content) {
         $max = 8;
         $datas = [];
         $count = 0;
-        // 次の相手の色に変換
-        $color = $this->turnColor($color);
         // 縦
         for ($i1=0; $i1 < $max; $i1++) { 
             // 横
@@ -99,7 +97,7 @@ class RequestLogic {
                 // コンテントが空の場合　置ける場合
                 if(!isset($content[$i1][$i2])) {
                     //　おけるかチェック
-                    $changes = $this->secondcheck($i1,$i2,$content,$color);
+                    $changes = $this->secondcheck($i1,$i2,$content,$next_color);
                     // おける箇所がある場合
                     if(empty($changes['problem'])) {
                         // 次に置ける箇所の座標を保存
@@ -183,7 +181,7 @@ class RequestLogic {
             // その列の変更する個数分回す
             $content[$c[0]][$c[1]] = $color;
         }
-        // 新しい盤面と変更点
+        // 新しい盤面
         return $content;
     }
     // 全ての置ける場所が存在しない時
@@ -255,10 +253,10 @@ class RequestLogic {
         return $data;
     }
     // 終了か判定処理
-    public function judge_finish($content,$color) {
-        $enemy_nexts = $this->nextCoords($color, $content);
-        $color = $this->turnColor($color);
-        $my_nexts = $this->nextCoords($color, $content);
+    public function judge_finish($content,$next_color) {
+        $enemy_nexts = $this->nextCoords($next_color, $content);
+        $my_color = $this->turnColor($next_color);
+        $my_nexts = $this->nextCoords($my_color, $content);
         if(empty($enemy_nexts['coords']) && empty($my_nexts['coords'])) {
             return true;
         }

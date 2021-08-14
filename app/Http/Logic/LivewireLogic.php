@@ -47,24 +47,31 @@ Class LivewireLogic {
         $content = $rLogic->reverse($color,$changes,$content,$i1,$i2);
         // DBに保存
         $board->updateContent($content,$color);
+        // nextsをDBに保存
+        $next_color = $board->next_color;
+        $nexts = $this->next_nexts($next_color, $content);
+        $board->fill(['next_coords' => $nexts])->save();
         // 終了かチェック
-        $judge_finish = $rLogic->judge_finish($content,$color);
+        $judge_finish = $rLogic->judge_finish($content,$next_color);
         return [
             'content' => $content,
             'finish' => $judge_finish,
         ];
     }
     public function pass($color) {
-        $room = new Room;
-        $room_id = session('room_id');
-        $room = $room->find($room_id);
+        $room = auth()->user()->room;
         $board = $room->board;
         $board->changeNextColor($color);
+        // 次のネクストを特定する処理を行う
+        $next_color = $board->next_color;
+        $content = $board->content;
+        $nexts = $this->next_nexts($next_color, $content);
+        $board->fill(['next_coords' => $nexts]);
     }
-    public function nexts($color, $content) {
+    public function nexts($next_color, $content) {
         $Logic = new RequestLogic;
-        $color = $Logic->turnColor($color);
-        $nexts = $Logic->nextCoords($color, $content);
+        $my_color = $Logic->turnColor($next_color);
+        $nexts = $Logic->nextCoords($my_color, $content);
         if(empty($nexts['coords'])) {
             return null;
         } else {
@@ -75,5 +82,15 @@ Class LivewireLogic {
         $action_time = time() - $action_start_time;
         $time = $has_time - $action_time;
         return $time;
+    }
+    public function next_nexts($next_color, $content) {
+        $rLogic = new RequestLogic;
+        $nexts = $rLogic->nextCoords($next_color, $content);
+        if(empty($nexts['coords'])) {
+            $nexts = null;
+        } else {
+            $nexts = array_column($nexts['coords'], 'coord');
+        }
+        return $nexts;
     }
 }

@@ -73,6 +73,7 @@ class Room extends Model
         $this->is_battle = 0;
         $board = $this->board;
         $board->next_color = null;
+        $board->next_coords = null;
         $users = $this->users;
         $user_color_black = $this->search_user($users, 1);
         $user_color_white = $this->search_user($users, 2);
