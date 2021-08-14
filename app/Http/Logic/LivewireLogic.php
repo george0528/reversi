@@ -3,7 +3,6 @@
 namespace App\Http\Logic;
 
 use App\Models\Room;
-use GuzzleHttp\Psr7\Request;
 
 Class LivewireLogic {
     public function put($i1, $i2, $color, $room_id) {
@@ -24,11 +23,12 @@ Class LivewireLogic {
         $changes = $rLogic->check($i1, $i2, $content, $color);
         // 二択かどうかチェック
         if($mode_id === 4) {
-            $next_put_coords = $board->next_put_coords;
+            $next_coords = $board->next_coords;
+            $next_coords = json_decode($next_coords);
             $next_flag = false;
-            foreach($next_put_coords as $next_coord) {
+            foreach($next_coords as $next_coord) {
                 if($next_coord === [$i1, $i2]) {
-                    $next_coord = true;
+                    $next_flag= true;
                 }
             }
             if(!$next_flag) {
@@ -89,10 +89,20 @@ Class LivewireLogic {
     public function next_nexts($next_color, $content) {
         $rLogic = new RequestLogic;
         $nexts = $rLogic->nextCoords($next_color, $content);
+        $mode_id = auth()->user()->room->mode_id;
         if(empty($nexts['coords'])) {
             $nexts = null;
         } else {
             $nexts = array_column($nexts['coords'], 'coord');
+            // モードが二択オセロの時
+            if($mode_id === 4 && count($nexts) > 2) {
+                // 順番をシャッフル
+                shuffle($nexts);
+                $nexts = [
+                    $nexts[0],
+                    $nexts[1],
+                ];
+            }
         }
         return $nexts;
     }

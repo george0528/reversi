@@ -16,15 +16,7 @@
 @endisset --}}
 
 {{-- @include('components.content.board') --}}
-@php
-    $mode_id = auth()->user()->room->mode_id;
-@endphp
-@if ($mode_id === 3)
-    @livewire('board')
-@endif
-@if ($mode_id === 4)
-    @livewire('two-choices-board')
-@endif
+@livewire('board')
 
 <script src="{{ asset('js/websocket.js') }}"></script>
 @endsection
