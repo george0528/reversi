@@ -217,6 +217,7 @@ class Board extends Component
         $this->has_time = null;
     }
     public function finish_btn() {
+        session()->flash('alert' , ['flag' => 1, 'message' => '終了しました']);
         return redirect()->route('onlineList');
     }
     public function data_reset() {

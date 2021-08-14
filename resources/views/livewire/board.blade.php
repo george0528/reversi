@@ -134,7 +134,7 @@
         <div wire:poll.keep-alive.{{ $has_time }}s="time_over" class=""></div>
     @endisset
     <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
-    {{-- @if(isset($pass) && $next_color === $color) --}}
+    @if(isset($pass) && $next_color === $color)
         <button wire:click="pass" class="component_btn primary">パス</button>
-    {{-- @endif --}}
+    @endif
 </div>
