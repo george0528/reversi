@@ -89,6 +89,8 @@ const api = (i1,i2) => {
         } else {
             // 次に置ける場所を指定する
             nexts(json['nextCoords']);
+            $nexts = document.querySelectorAll('.next');
+            $nexts[0].click();
         }
     })
     .catch(error => {

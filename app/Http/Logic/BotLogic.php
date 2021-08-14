@@ -22,7 +22,6 @@ Class BotLogic {
         //　ユーザーの次に置ける場所を探す
         $requestLogic = new RequestLogic;
         // 次に置ける場所を特定する
-        $usercolor = $this->changeColor($usercolor);
         $nexts = $requestLogic->nextCoords($usercolor,$content);
         // 次に置ける場所をチェックする
         $json = $requestLogic->nextCheck($nexts, $json);
@@ -43,10 +42,6 @@ Class BotLogic {
     public function botreverse($nexts, $board, $usercolor, $content) {
         // 置く場所を決める
         $maxCoord = $this->maxCoord($nexts);
-        
-        // 色を反転
-        $usercolor = $this->changeColor($usercolor);
-
         $requestLogic = new RequestLogic;
         //　おけるかチェック
         $changes = $requestLogic->check($maxCoord[0],$maxCoord[1],$content,$usercolor);

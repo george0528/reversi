@@ -22,15 +22,10 @@ class PutEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($puttedCoord, $content, $start_time)
+    public function __construct($puttedCoord, $content)
     {
         $this->puttedCoord = $puttedCoord;
         $this->content = $content;
-        $Logic = new LivewireLogic;
-        $user = auth()->user();
-        $time = $Logic->diff_time($start_time, $user->time);
-        $user->time = $time;
-        $user->save();
     }
 
     /**

@@ -46,8 +46,9 @@ class AjaxController extends Controller
                 'user' => $usercolor,
             ];
         }
+            $next_color = $requestLogic->turnColor($usercolor);
             // 次に置ける場所を特定する
-            $nexts = $requestLogic->nextCoords($usercolor,$content);
+            $nexts = $requestLogic->nextCoords($next_color,$content);
             // 次に置ける場所がない時 パスをtrueにする
             $json = $requestLogic->nextCheck($nexts,$json);
         // モード別上限分岐
