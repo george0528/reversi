@@ -55,9 +55,6 @@ class Board extends Component
         $board = $user->room->board;
         $this->content = $board->getContent();
         $this->next_color = $board->next_color;
-        if($this->next_color == $this->color) {
-            $this->nexts();
-        }
     }
     public function put($i1, $i2) {
         $this->puttedCoord = [$i1,$i2];
@@ -93,19 +90,22 @@ class Board extends Component
         $this->content = $data['content'];
         $this->puttedCoord = $data['puttedCoord'];
         $this->turn_next_color();
-        $this->set_times();
+        $this->set_my_times();
         $this->nexts();
     }
     public function enemy_pass() {
         $this->turn_next_color();
-        $this->set_times();
+        $this->set_my_times();
         $this->nexts();
     }
     public function enemy_join() {
         $this->enemy = true;
         $room = auth()->user()->room;
         if(isset($room) && empty($room->board->winner)) {
-            $this->set_times();
+            $this->set_my_times();
+            $users_times = $this->get_users_times();
+            $this->emit('js_times', $users_times);
+            $this->nexts();
         }
     }
     public function enemy_leave() {
@@ -160,7 +160,10 @@ class Board extends Component
                 $this->enemy = true;
                 $this->finish($finish_data);
             } else {
-                $this->set_times();
+                $this->set_my_times();
+                $users_times = $this->get_users_times();
+                $this->emit('js_times', $users_times);
+                $this->nexts();
             }
         }
     }
@@ -230,7 +233,7 @@ class Board extends Component
         }
         return $winner_color;
     }
-    public function set_times() {
+    public function set_my_times() {
         if(isset($this->color) && isset($this->next_color)) {
             $this->has_time = auth()->user()->time;
             if($this->color == $this->next_color) {
@@ -256,9 +259,6 @@ class Board extends Component
         $enemy_color = $Logic->turnColor($this->color);
         $enemy = $user->room->search_user($user->room->users, $enemy_color);
         return $enemy->time;
-    }
-    public function timer() {
-        $this->has_time--;
     }
     public function update_time() {
         $Logic = new LivewireLogic;
