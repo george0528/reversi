@@ -61,6 +61,9 @@ class Board extends Component
         $Logic = new LivewireLogic;
         $results = $Logic->put($i1, $i2, $this->color, $this->room_id);
         if(isset($results['problem'])) {
+            $user = auth()->user();
+            $this->has_time = $Logic->diff_time($this->start_time, $user->time);
+            $this->enemy_has_time = $this->get_enemy_time();
             return $this->message = 'そこには置けません';
         } else {
             $this->data_reset();
