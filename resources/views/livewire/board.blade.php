@@ -47,9 +47,6 @@
     <h1>あなたの色は{{ $color_txt }}</h1>
         <h1>あなたの残り時間：<span class="my_time">{{ $has_time }}</span></h1>
         <h1>相手の残り時間：<span class="enemy_time">{{ $enemy_has_time }}</span></h1>
-    {{-- @isset($start_time)
-        <div wire:poll.1000ms.keep-alive="timer"></div>
-    @endisset --}}
     <script>
         var count_flag = false;
         var count_time;
@@ -137,7 +134,7 @@
         <div wire:poll.keep-alive.{{ $has_time }}s="time_over" class=""></div>
     @endisset
     <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
-    {{-- @if(isset($pass) && $next_color === $color) --}}
+    @if(isset($pass) && $next_color === $color)
         <button wire:click="pass" class="component_btn primary">パス</button>
-    {{-- @endif --}}
+    @endif
 </div>

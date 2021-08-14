@@ -15,3 +15,15 @@
     </div>
 @endif
 </header>
+<div class="component">
+    @if (session('alert'))
+    @php
+        $alert = session('alert');
+    @endphp
+        @if ($alert['flag'])
+            <div class="component_alert success">{{ $alert['message'] }}</div>
+        @else
+            <div class="component_alert danger">{{ $alert['message'] }}</div>
+        @endif
+    @endif
+</div>

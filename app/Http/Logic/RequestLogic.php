@@ -94,7 +94,7 @@ class RequestLogic {
         for ($i1=0; $i1 < $max; $i1++) { 
             // 横
             for ($i2=0; $i2 < $max; $i2++) { 
-                // コンテントが空の場合　置ける場合
+                // コンテントが空の場合＝置ける
                 if(!isset($content[$i1][$i2])) {
                     //　おけるかチェック
                     $changes = $this->secondcheck($i1,$i2,$content,$next_color);

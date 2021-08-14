@@ -55,15 +55,15 @@ class Board extends Component
         $board = $user->room->board;
         $this->content = $board->getContent();
         $this->next_color = $board->next_color;
-        if($this->next_color == $this->color) {
-            $this->nexts();
-        }
     }
     public function put($i1, $i2) {
         $this->puttedCoord = [$i1,$i2];
         $Logic = new LivewireLogic;
         $results = $Logic->put($i1, $i2, $this->color, $this->room_id);
         if(isset($results['problem'])) {
+            $user = auth()->user();
+            $this->has_time = $Logic->diff_time($this->start_time, $user->time);
+            $this->enemy_has_time = $this->get_enemy_time();
             return $this->message = 'そこには置けません';
         } else {
             $this->data_reset();
@@ -93,19 +93,22 @@ class Board extends Component
         $this->content = $data['content'];
         $this->puttedCoord = $data['puttedCoord'];
         $this->turn_next_color();
-        $this->set_times();
+        $this->set_my_times();
         $this->nexts();
     }
     public function enemy_pass() {
         $this->turn_next_color();
-        $this->set_times();
+        $this->set_my_times();
         $this->nexts();
     }
     public function enemy_join() {
         $this->enemy = true;
         $room = auth()->user()->room;
         if(isset($room) && empty($room->board->winner)) {
-            $this->set_times();
+            $this->set_my_times();
+            $users_times = $this->get_users_times();
+            $this->emit('js_times', $users_times);
+            $this->nexts();
         }
     }
     public function enemy_leave() {
@@ -119,8 +122,9 @@ class Board extends Component
         }
     }
     public function nexts() {
-        $Logic = new LivewireLogic;
-        $nexts = $Logic->next_nexts($this->next_color, $this->content);
+        $board = auth()->user()->room->board;
+        $nexts = $board->next_coords;
+        $nexts = json_decode($nexts);
         if(empty($nexts)) {
             $this->pass = true;
             $this->reset(['nexts']);
@@ -146,6 +150,16 @@ class Board extends Component
     public function here($users) {
         if(count($users) == 1) {
             $this->enemy = false;
+            // ネクスト初期設定
+            $board = auth()->user()->room->board;
+            if(isset($board)) {
+                $next_color = $board->next_color;
+                $Logic = new LivewireLogic;
+                $content = $board->getContent();
+                $nexts = $Logic->next_nexts($next_color, $content);
+                $json_nexts = json_encode($nexts);
+                $board->fill(['next_coords' => $json_nexts])->save();
+            }
         } else {
             $this->enemy = true;
             sleep(1);
@@ -160,7 +174,10 @@ class Board extends Component
                 $this->enemy = true;
                 $this->finish($finish_data);
             } else {
-                $this->set_times();
+                $this->set_my_times();
+                $users_times = $this->get_users_times();
+                $this->emit('js_times', $users_times);
+                $this->nexts();
             }
         }
     }
@@ -200,6 +217,7 @@ class Board extends Component
         $this->has_time = null;
     }
     public function finish_btn() {
+        session()->flash('alert' , ['flag' => 1, 'message' => '終了しました']);
         return redirect()->route('onlineList');
     }
     public function data_reset() {
@@ -230,7 +248,7 @@ class Board extends Component
         }
         return $winner_color;
     }
-    public function set_times() {
+    public function set_my_times() {
         if(isset($this->color) && isset($this->next_color)) {
             $this->has_time = auth()->user()->time;
             if($this->color == $this->next_color) {
@@ -256,9 +274,6 @@ class Board extends Component
         $enemy_color = $Logic->turnColor($this->color);
         $enemy = $user->room->search_user($user->room->users, $enemy_color);
         return $enemy->time;
-    }
-    public function timer() {
-        $this->has_time--;
     }
     public function update_time() {
         $Logic = new LivewireLogic;
