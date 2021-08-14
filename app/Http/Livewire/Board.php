@@ -217,8 +217,10 @@ class Board extends Component
     public function turn_next_color() {
         $this->reset(['start_time']);
         $this->next_color = auth()->user()->room->board->next_color;
-        $users_times = $this->get_users_times();
-        $this->emit('js_times', $users_times);
+        if(isset($this->next_color)) {
+            $users_times = $this->get_users_times();
+            $this->emit('js_times', $users_times);
+        }
     }
     public function winner_color($winner, $board) {
         if($board->user1 == $winner) {
