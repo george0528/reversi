@@ -65,7 +65,7 @@ Class LivewireLogic {
         $board->changeNextColor($color);
         // 次のネクストを特定する処理を行う
         $next_color = $board->next_color;
-        $content = $board->content;
+        $content = $board->getContent();
         $nexts = $this->next_nexts($next_color, $content);
         $nexts = json_encode($nexts);
         $board->fill(['next_coords' => $nexts]);
