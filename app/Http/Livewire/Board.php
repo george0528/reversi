@@ -119,8 +119,9 @@ class Board extends Component
         }
     }
     public function nexts() {
-        $Logic = new LivewireLogic;
-        $nexts = $Logic->next_nexts($this->next_color, $this->content);
+        $board = auth()->user()->room->board;
+        $nexts = $board->next_coords;
+        $nexts = json_decode($nexts);
         if(empty($nexts)) {
             $this->pass = true;
             $this->reset(['nexts']);
@@ -146,6 +147,16 @@ class Board extends Component
     public function here($users) {
         if(count($users) == 1) {
             $this->enemy = false;
+            // ネクスト初期設定
+            $board = auth()->user()->room->board;
+            if(isset($board)) {
+                $next_color = $board->next_color;
+                $Logic = new LivewireLogic;
+                $content = $board->getContent();
+                $nexts = $Logic->next_nexts($next_color, $content);
+                $json_nexts = json_encode($nexts);
+                $board->fill(['next_coords' => $json_nexts])->save();
+            }
         } else {
             $this->enemy = true;
             sleep(1);

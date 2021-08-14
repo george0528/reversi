@@ -26,9 +26,9 @@ Class LivewireLogic {
         if($mode_id === 4) {
             $next_put_coords = $board->next_put_coords;
             $next_flag = false;
-            foreach($next_put_coords as $next_cooard) {
-                if($next_cooard === [$i1, $i2]) {
-                    $next_cooard = true;
+            foreach($next_put_coords as $next_coord) {
+                if($next_coord === [$i1, $i2]) {
+                    $next_coord = true;
                 }
             }
             if(!$next_flag) {
@@ -50,6 +50,7 @@ Class LivewireLogic {
         // nextsをDBに保存
         $next_color = $board->next_color;
         $nexts = $this->next_nexts($next_color, $content);
+        $nexts = json_encode($nexts);
         $board->fill(['next_coords' => $nexts])->save();
         // 終了かチェック
         $judge_finish = $rLogic->judge_finish($content,$next_color);
@@ -66,7 +67,9 @@ Class LivewireLogic {
         $next_color = $board->next_color;
         $content = $board->content;
         $nexts = $this->next_nexts($next_color, $content);
+        $nexts = json_encode($nexts);
         $board->fill(['next_coords' => $nexts]);
+        $board->save();
     }
     public function nexts($next_color, $content) {
         $Logic = new RequestLogic;
