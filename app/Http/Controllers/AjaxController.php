@@ -17,7 +17,7 @@ class AjaxController extends Controller
         $room = $room->find($request->room);
         $board = $room->board;
         $content = $board->getContent();
-        // ユーザー　白か黒　判断する　ロジックを組む
+        // ユーザー　白か黒　判断する
         $usercolor = intval($request->color);
         // パスではない時
         if(!$request->pass) {
