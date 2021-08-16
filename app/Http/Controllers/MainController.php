@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\RoomEvent;
+use App\Models\Board;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\User;
@@ -16,13 +17,36 @@ class MainController extends Controller
         return view('main.index', compact('room'));
     }
     // ボット
-    public function bot(Room $room) {
+    public function bot(Room $room, Board $board) {
+        // ルームを作成
         $room = $room->find(1);
+        // $room = $room->free();
+        // $content = $room->reset();
+        // $b = $board->create([
+        //     'next_color' => 1,
+        //     'content' => $content,
+        // ]);
+        // $room = $room->fill([
+        //     'mode_id' => 1,
+        //     'board_id' => $b->id,
+        // ]);
+        // $room->save();
         return view('main.bot', compact('room'));
     }
     // 二人オフライン対戦
-    public function double(Room $room) {
+    public function double(Request $request,Room $room, Board $board) {
         $room = $room->find(2);
+        // $room = $room->free();
+        // $content = $room->reset();
+        // $b = $board->create([
+        //     'next_color' => 1,
+        //     'content' => $content,
+        // ]);
+        // $room = $room->fill([
+        //     'mode_id' => 2,
+        //     'board_id' => $b->id,
+        // ]);
+        // $room->save();
         return view('main.double', compact('room'));
     }
     // 二人オンライン対戦

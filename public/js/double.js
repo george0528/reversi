@@ -65,6 +65,9 @@ const api = (i1,i2) => {
         if(json['problem']) {
             return console.log('その置き場所は置けません');
         }
+        if(pass) {
+            pass.classList.remove('open');
+        }
         // 指定の場所に置く
         target(json['i1'], json['i2'],json['user']);
         // 変更する　リバース
@@ -86,6 +89,9 @@ const api = (i1,i2) => {
         // 置ける場所がない時　パス
         if(json['pass']) {
             console.log('置ける場所がありません。');
+            var pass = document.querySelector('.pass');
+            console.log(pass);
+            pass.classList.add('open');
         } else {
             // 次に置ける場所を指定する
             nexts(json['nextCoords']);

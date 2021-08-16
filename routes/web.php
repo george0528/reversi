@@ -37,6 +37,7 @@ Route::get('/mode/switch', [MainController::class, 'modeSwitch'])->name('modeSwi
 Route::get('/mode/bot', [MainController::class, 'bot'])->name('bot');
 Route::get('/mode/double', [MainController::class, 'double'])->name('double');
 Route::get('/reset', [MainController::class, 'reset'])->name('reset');
+Route::post('/login/guest', [MainController::class, 'guest_login'])->name('guest_login');
 
 // ログイン
 Route::group(['middleware' => ['auth']], function() {

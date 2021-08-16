@@ -43,13 +43,13 @@ Class BotLogic {
         // 置く場所を決める
         $maxCoord = $this->maxCoord($nexts);
         $requestLogic = new RequestLogic;
+        $bot_color = $this->changeColor($usercolor);
         //　おけるかチェック
-        $changes = $requestLogic->check($maxCoord[0],$maxCoord[1],$content,$usercolor);
+        $changes = $requestLogic->check($maxCoord[0],$maxCoord[1],$content,$bot_color);
         // 実際にひっくりかえす
-        $content = $requestLogic->reverse($usercolor,$changes,$content,$maxCoord[0],$maxCoord[1]);
+        $content = $requestLogic->reverse($bot_color,$changes,$content,$maxCoord[0],$maxCoord[1]);
         // データベースに保存
         $board->fillContent($content);
-
         return ['changes' => $changes, 'content' => $content , 'coord' => $maxCoord];
     }
     // 一番多くひっくりかえせる場所の座標を取る

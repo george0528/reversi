@@ -197,8 +197,10 @@ class Board extends Component
             $this->enemy = true;
             $this->finish($finish_data);
             // room削除処理
-            $room->is_battle = 0;
-            $room->save();
+            if(isset($room)) {
+                $room->is_battle = 0;
+                $room->save();
+            }
         }
     }
     public function time_over() {
