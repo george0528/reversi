@@ -11,6 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Room;
 
+use function PHPUnit\Framework\returnSelf;
 
 class User extends Authenticatable
 {
@@ -62,6 +63,13 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+    public function guest() {
+        $user = null;
+        while (empty($user)) {
+            $user = User::factory()->create();
+        }
+        auth()->loginUsingId($user->id);
+    }
     public function join_room($room) {
         $user = auth()->user();
         $room_id = $room->id;

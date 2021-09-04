@@ -7,7 +7,9 @@ use App\Models\Board;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Log;
 
 class MainController extends Controller
 {
