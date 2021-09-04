@@ -17,6 +17,10 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->truncate();
         DB::table('users')->insert([
+            'name' => 'guest',
+            'password' => Hash::make('admin_guest_password_0329'),
+        ]);
+        DB::table('users')->insert([
             'name' => 'user1',
             'password' => Hash::make('password'),
         ]);

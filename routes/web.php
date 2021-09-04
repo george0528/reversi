@@ -5,6 +5,7 @@ use App\Events\PublicEvent;
 use App\Events\PrivateEvent;
 use App\Events\Test;
 use App\Models\Room;
+use App\Models\User;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MainController;
@@ -52,6 +53,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/mode/online/room/leave', [MainController::class, 'onlineLeave'])->name('onlineLeave');
 });
 
+// テスト
 Route::get('/delete', function() {
     $user = auth()->user();
     $user->room_id = null;
@@ -71,11 +73,10 @@ Route::get('/board', function (Board $board) {
 Route::get('/livewire', function () {
     return view('main.livewire');
 })->name('livewire');
-Route::get('/time', function() {
-$now = time();
-$last_time = 1628355165;
-    dd(time() - $last_time);
-});
+Route::get('/guest', function(User $user) {
+    $user->guest();
+    return redirect()->back();
+})->name('guest');
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');
