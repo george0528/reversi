@@ -7,6 +7,29 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## 初期設定
+### サーバー起動
+```
+php artisan serve
+```
+### Websocket起動
+```
+laravel-echo-server
+```
+
+## ログインテスト
+テストユーザー情報
+
+ユーザーネーム
+```
+user1 
+```
+か
+```
+user2
+```
+パスワード: password
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

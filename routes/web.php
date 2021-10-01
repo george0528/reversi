@@ -38,7 +38,10 @@ Route::get('/mode/switch', [MainController::class, 'modeSwitch'])->name('modeSwi
 Route::get('/mode/bot', [MainController::class, 'bot'])->name('bot');
 Route::get('/mode/double', [MainController::class, 'double'])->name('double');
 Route::get('/reset', [MainController::class, 'reset'])->name('reset');
-Route::post('/login/guest', [MainController::class, 'guest_login'])->name('guest_login');
+Route::get('/guest', function(User $user) {
+    $user->guest();
+    return redirect()->back();
+})->name('guest');
 
 // ログイン
 Route::group(['middleware' => ['auth']], function() {
@@ -48,7 +51,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('/mode/online/create', [MainController::class, 'roomCreate'])->name('roomCreate');
     });
     Route::get('/mode/online/room/battle', [MainController::class, 'onlineBattle'])->name('onlineBattle')->middleware('is_battle');
-    Route::get('/user/profile/record', [MainController::class, 'record'])->name('record');
+    Route::get('/user/profile/record', [MainController::class, 'record'])->middleware('is_not_guest_user')->name('record');
     Route::get('/mode/online/wait', [MainController::class, 'onlineWait'])->name('onlineWait');
     Route::post('/mode/online/room/leave', [MainController::class, 'onlineLeave'])->name('onlineLeave');
 });
@@ -60,28 +63,15 @@ Route::get('/delete', function() {
     $user->save();
     return redirect()->back();
 });
-Route::get('/room', function (Room $room) {
-    $room = $room->find(84);
-    dd($room);
-    return view('test');
-})->name('room');
-Route::get('/board', function (Board $board) {
-    $board = $board->find(80);
-    dd($board);
-    return view('test');
-})->name('test');
-Route::get('/livewire', function () {
-    return view('main.livewire');
-})->name('livewire');
-Route::get('/guest', function(User $user) {
-    $user->guest();
-    return redirect()->back();
-})->name('guest');
+Route::get('/user/info', function() {
+    $user = auth()->user();
+    dd($user);
+});
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');
 
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified', 'is_not_guest_user'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
