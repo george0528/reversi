@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->integer('room_id')->nullable();
             $table->integer('color')->nullable();
             $table->integer('time')->nullable();
+            $table->boolean('is_guest_user')->default(0);
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
