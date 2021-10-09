@@ -18,4 +18,9 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
         $response->assertOk();
     }
+    public function test_file()
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+    }
 }

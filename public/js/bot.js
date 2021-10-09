@@ -8,7 +8,7 @@
     const pass = document.querySelector('.pass').querySelector('button');
     const finish = document.querySelector('.finish');
     const winner = finish.querySelector('.winner');
-    const room = 1;
+    const room = document.querySelector('#room_id').value;
     const color = 1;
     let count = 0;
     const deleteBtn = document.querySelector('#delete');
@@ -129,14 +129,14 @@
                     return console.log('ゲームが終了しました');
                 }
                 // テスト
-                // $nexts = document.querySelectorAll('.next');
-                // count++;
-                // if(!json['pass'] && $nexts) {
-                //     var $next = $nexts[random($nexts)];
-                //     $next.click();
-                // } else {
-                //     // document.querySelector('.pass').querySelector('button').click();
-                // }
+                $nexts = document.querySelectorAll('.next');
+                count++;
+                if(!json['pass'] && $nexts) {
+                    var $next = $nexts[random($nexts)];
+                    $next.click();
+                } else {
+                    // document.querySelector('.pass').querySelector('button').click();
+                }
             }, 1000);
         })
         .catch(error => {
