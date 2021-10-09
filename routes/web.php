@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/home', function() {
     return view('welcome');
 });
@@ -67,11 +66,16 @@ Route::get('/user/info', function() {
     $user = auth()->user();
     dd($user);
 });
+Route::get('/test/sort', function() {
+    $room = new Room;
+    $room = $room->orderBy('id', 'desc')->first();
+    return $room;
+});
 
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');
 
 
-Route::middleware(['auth:sanctum', 'verified', 'is_not_guest_user'])->get('/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

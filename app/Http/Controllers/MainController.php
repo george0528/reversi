@@ -14,25 +14,23 @@ use Illuminate\Support\Facades\Log;
 class MainController extends Controller
 {
     // topページ モード選択画面
-    public function index(Room $room) {
-        $room = $room->find(1);
-        return view('main.index', compact('room'));
+    public function index() {
+        return view('main.index');
     }
     // ボット
     public function bot(Room $room, Board $board) {
         // ルームを作成
-        $room = $room->find(1);
-        // $room = $room->free();
-        // $content = $room->reset();
-        // $b = $board->create([
-        //     'next_color' => 1,
-        //     'content' => $content,
-        // ]);
-        // $room = $room->fill([
-        //     'mode_id' => 1,
-        //     'board_id' => $b->id,
-        // ]);
-        // $room->save();
+        $room = $room->free();
+        $content = $room->reset();
+        $b = $board->create([
+            'next_color' => 1,
+            'content' => $content,
+        ]);
+        $room = $room->fill([
+            'mode_id' => 1,
+            'board_id' => $b->id,
+        ]);
+        $room->save();
         return view('main.bot', compact('room'));
     }
     // 二人オフライン対戦
@@ -86,7 +84,7 @@ class MainController extends Controller
     // 対戦ルーム参加
     public function onlineJoin(Request $request, Room $room) {
         $room_id = $request->room_id;
-        $room = $room->join($room_id,$request);
+        $room = $room->join($room_id);
         if(empty($room)) {
             return redirect()->route('onlineList')->with('message', 'そのルームは現在ありません。');
         }

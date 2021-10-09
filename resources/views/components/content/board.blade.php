@@ -28,5 +28,5 @@
     <button class="component_btn danger" id="delete">消す</button>
 </div>
 <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
-<a href="{{ route('test') }}" class="component_btn primary">テスト</a>
+{{-- <a href="{{ route('test') }}" class="component_btn primary">テスト</a> --}}
 <a href="{{ route('index') }}" class="component_btn primary">モード選択画面</a>

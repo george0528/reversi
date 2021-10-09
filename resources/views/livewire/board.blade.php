@@ -92,7 +92,7 @@
         @endif
     @endforeach --}}
     <table class="table">
-        @for ($i1 = 0; $i1 < 8; $i1++)
+        @foreach (range(0,7) as $i1)
         <tr data-tr-index='{{ $i1 }}'>
             @for ($i2 = 0; $i2 < 8; $i2++)
                 @if (isset($content[$i1][$i2]) && $content[$i1][$i2] == 1)
@@ -127,7 +127,7 @@
                 @endif
             @endfor
         </tr>
-        @endfor
+        @endforeach
     </table>
     {{-- 時間切れ --}}
     @isset($start_time)
