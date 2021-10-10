@@ -5,11 +5,31 @@ const $table = document.querySelector('.table');
 const $trs = $table.querySelectorAll('tr');
 const $tds = $table.querySelectorAll('td');
 const $color = document.querySelector('.color');
-const room = 2;
+const player1_count = document.querySelector('.player1_count');
+const player2_count = document.querySelector('.player2_count');
+const room = document.querySelector('#room_id').value;
+const finish = document.querySelector('.finish');
+const winner = finish.querySelector('.winner');
+const deleteBtn = document.querySelector('#delete');
+
 // 回して変数
 
-
-
+// 終了ボタン　クリックイベント
+deleteBtn.addEventListener('click', () => {
+    finish.classList.remove('open');
+    var url = `${location.protocol}//${location.host}`;
+    window.location.href = url;
+})
+// ロード後イベント
+window.onload = () => {
+    $nexts = [
+        [4,2],
+        [5,3],
+        [2,4],
+        [3,5]
+    ];
+    nexts($nexts);
+}
 // クリックイベント
 $tds.forEach($td => {
     $td.addEventListener('click', () => {
@@ -86,6 +106,22 @@ const api = (i1,i2) => {
         document.querySelectorAll('.next').forEach(e => {
             e.classList.remove('next');
         });
+        // コマの数を更新
+        if(json['counts']) {
+            player1_count.textContent = String(json['counts'][1]);
+            player2_count.textContent = String(json['counts'][2]);
+        }
+        // 終了か
+        if(json['finish']) {
+            finish.classList.add('open');
+            if(json['winner'] == 1) {
+                winner.textContent = '黒';
+            } else if(json['winner'] == 2) {
+                winner.textContent = '白';
+            } else {
+                winner.textContent = '引き分け';
+            }
+        }
         // 置ける場所がない時　パス
         if(json['pass']) {
             console.log('置ける場所がありません。');

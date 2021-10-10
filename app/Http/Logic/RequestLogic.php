@@ -235,8 +235,10 @@ class RequestLogic {
         }
         if($datas['counts'][1] > $datas['counts'][2]) {
             $datas['winner'] = 1;
-        } else {
+        } elseif($datas['counts'][1] < $datas['counts'][2]) {
             $datas['winner'] = 2;
+        } else {
+            $datas['winner'] = 3;
         }
         return $datas;
     }

@@ -12,9 +12,10 @@
     const color = 1;
     const player1_count = document.querySelector('.player1_count');
     const player2_count = document.querySelector('.player2_count');
-    let count = 0;
     const deleteBtn = document.querySelector('#delete');
     // テスト
+
+    // 終了ボタン クリックイベント
     deleteBtn.addEventListener('click', () => {
         finish.classList.remove('open');
         var url = `${location.protocol}//${location.host}`;
@@ -138,13 +139,19 @@
                     // 次に置ける場所を指定する
                     nexts(json['nextCoords']);
                 }
+                // 終了していたら
                 if(json['finish']) {
                     finish.classList.add('open');
-                    winner.textContent = json['winner'];
+                    if(json['winner'] == 1) {
+                        winner.textContent = '黒';
+                    } else if(json['winner'] == 2) {
+                        winner.textContent = '白';
+                    } else {
+                        winner.textContent = '引き分け';
+                    }
                 }
                 // テスト
                 $nexts = document.querySelectorAll('.next');
-                count++;
                 if(!json['pass'] && $nexts) {
                     var $next = $nexts[random($nexts)];
                     $next.click();
