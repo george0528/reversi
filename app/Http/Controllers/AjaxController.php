@@ -64,7 +64,6 @@ class AjaxController extends Controller
                     }
                     if(isset($json['finish'])) {
                         $judge = $requestLogic->judge($content);
-                        $json['counts'] = $judge['counts'];
                         $json['winner'] = $judge['winner'];
                         // ログインしていたら
                         if(auth()->check()) {
@@ -76,22 +75,22 @@ class AjaxController extends Controller
                             $board->fill(['winner' => $winner_id])->save();
                         }
                     }
-                    // コマの数だけ追加
-                    $judge = $requestLogic->judge($content);
-                    $json['counts'] = $judge['counts'];
                     break;
                     // オフライン対戦
                     case 2:
-                        // ..code
-                        break;
-                        // オンライン対戦時
-                        case 3:
-                            // ..code
-                            break;
+                        $finish = $requestLogic->judge_finish($content, $next_color);
+                        if($finish) {
+                            $judge = $requestLogic->judge($content);
+                            $json['finish'] = true;
+                            $json['winner'] = $judge['winner'];
                         }
+                        break;
                     }
-        // レスポンス
-        Log::debug($json);
+                }
+        // コマの数を取得
+        $judge = $requestLogic->judge($content);
+        $json['counts'] = $judge['counts'];
+        // Log::debug($json);
         return response()->json($json);
     }
     // パス

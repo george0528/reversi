@@ -81,6 +81,8 @@ class Room extends Model
             $board->winner = $user_color_black->id;
         } elseif($winner_color == 2) {
             $board->winner = $user_color_white->id;
+        } else {
+            $board->winner = 0;
         }
         $board->user1 = $user_color_black->id;
         $board->user2 = $user_color_white->id;

@@ -46,19 +46,25 @@ class MainController extends Controller
     }
     // 二人オフライン対戦
     public function double(Request $request,Room $room, Board $board) {
-        $room = $room->find(2);
-        // $room = $room->free();
-        // $content = $room->reset();
-        // $b = $board->create([
-        //     'next_color' => 1,
-        //     'content' => $content,
-        // ]);
-        // $room = $room->fill([
-        //     'mode_id' => 2,
-        //     'board_id' => $b->id,
-        // ]);
-        // $room->save();
-        return view('main.double', compact('room'));
+        $room = $room->free();
+        $content = $room->reset();
+        $b = $board->create([
+            'next_color' => 1,
+            'content' => $content,
+        ]);
+        $room = $room->fill([
+            'mode_id' => 2,
+            'board_id' => $b->id,
+        ]);
+        $room->save();
+        $players = [
+            ['name' => 'ゲスト', 'count' => 2],
+            ['name' => 'ゲスト', 'count' => 2]
+        ];
+        if (auth()->check()) {
+            $players[0]['name'] = auth()->user()->name;
+        }
+        return view('main.double', compact('room', 'players'));
     }
     // 二人オンライン対戦
     // 対戦相手待ちリスト
