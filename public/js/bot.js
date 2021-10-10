@@ -10,12 +10,26 @@
     const winner = finish.querySelector('.winner');
     const room = document.querySelector('#room_id').value;
     const color = 1;
+    const player1_count = document.querySelector('.player1_count');
+    const player2_count = document.querySelector('.player2_count');
     let count = 0;
     const deleteBtn = document.querySelector('#delete');
     // テスト
     deleteBtn.addEventListener('click', () => {
         finish.classList.remove('open');
+        var url = `${location.protocol}//${location.host}`;
+        window.location.href = url;
     })
+    // ロード後イベント
+    window.onload = () => {
+        $nexts = [
+            [4,2],
+            [5,3],
+            [2,4],
+            [3,5]
+        ]
+        nexts($nexts);
+    }
     // クリックイベント
     $tds.forEach($td => {
         $td.addEventListener('click', () => {
@@ -82,7 +96,6 @@
             return 1;
         }
     }
-    
     // ajax通信関数
     const api = (i1,i2,pass) => {
         fetch(`/ajax/send`, set(i1,i2,pass))
@@ -90,7 +103,6 @@
             return response.json();
         })
         .then(json => {
-            console.log(json);
             // おけない場所を選択した場合
             if(json['problem']) {
                 return console.log('その置き場所は置けません');
@@ -107,14 +119,17 @@
             document.querySelectorAll('.next').forEach(e => {
                 e.classList.remove('next');
             });
+            // コマの数を更新
+            if(json['counts']) {
+                player1_count.textContent = String(json['counts'][1]);
+                player2_count.textContent = String(json['counts'][2]);
+            }
             // ボットが置く
             setTimeout(() => {
                 if(json['botChanges']) {
                     target(json['botCoord'][0], json['botCoord'][1], changeColor(json['user']));
                     put(json['botCoord']);
                     reverse(json['botChanges'], changeColor(json['user']));
-                } else {
-                    console.log('ボットが置ける所がありません');
                 }
                 // 置ける場所がない時　パス
                 if(json['pass']) {
@@ -126,7 +141,6 @@
                 if(json['finish']) {
                     finish.classList.add('open');
                     winner.textContent = json['winner'];
-                    return console.log('ゲームが終了しました');
                 }
                 // テスト
                 $nexts = document.querySelectorAll('.next');
@@ -137,13 +151,13 @@
                 } else {
                     // document.querySelector('.pass').querySelector('button').click();
                 }
-            }, 1000);
+            }, 500);
         })
         .catch(error => {
-            console.log('エラー：'+error);
+            console.log('エラー：' + error);
+
         });
     }
-    
     // api設定
     const set = (i1,i2,pass) =>{
         let $token = document.querySelector('meta[name="csrf-token"]').content;

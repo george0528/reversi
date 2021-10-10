@@ -73,7 +73,7 @@ class RequestLogic {
         }
         return $datas;
     }
-    // 次に置ける場所かパスか終了をとる
+    // 次に置ける場所が置けるか、パスかチェックする
     public function nextCheck($nexts, $json) {
         // 次に置ける場所がない時 パスをtrueにする
         if(isset($nexts['pass'])) {
@@ -271,5 +271,6 @@ class RequestLogic {
         }
         return $color;
     }
+    // 
 }
 ?>
