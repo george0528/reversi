@@ -66,6 +66,12 @@ Route::get('/user/info', function() {
     $user = auth()->user();
     dd($user);
 });
+Route::get('/livewire', function() {
+    $board = new Board;
+    $board = $board->find(47);
+    $reversi = $board->getContent();
+    return view('main.livewire', compact('reversi'));
+});
 Route::get('/test/sort', function() {
     $room = new Room;
     $room = $room->orderBy('id', 'desc')->first();

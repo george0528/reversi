@@ -30,8 +30,19 @@ class MainController extends Controller
             'mode_id' => 1,
             'board_id' => $b->id,
         ]);
+        $players = [
+            ['name' => 'ゲスト','count' => 2],
+            ['name' => 'ボット','count' => 2]
+        ];
+        // ログインしていたら戦績を保存する
+        if(auth()->check()) {
+            $user_id = auth()->user()->id;
+            $board->fill([
+                'user1' => $user_id
+            ])->save();
+        }
         $room->save();
-        return view('main.bot', compact('room'));
+        return view('main.bot', compact('room', 'players'));
     }
     // 二人オフライン対戦
     public function double(Request $request,Room $room, Board $board) {

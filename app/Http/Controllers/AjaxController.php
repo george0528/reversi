@@ -46,12 +46,12 @@ class AjaxController extends Controller
                 'user' => $usercolor,
             ];
         }
-            $next_color = $requestLogic->turnColor($usercolor);
-            // 次に置ける場所を特定する
-            $nexts = $requestLogic->nextCoords($next_color,$content);
-            // 次に置ける場所がない時 パスをtrueにする
-            $json = $requestLogic->nextCheck($nexts,$json);
-        // モード別上限分岐
+        $next_color = $requestLogic->turnColor($usercolor);
+        // 次に置ける場所を特定する
+        $nexts = $requestLogic->nextCoords($next_color,$content);
+        // 次に置ける場所がない時 パスをtrueにする
+        $json = $requestLogic->nextCheck($nexts,$json);
+        // モード別条件分岐
         if(isset($room->mode_id)) {
             switch ($room->mode_id) {
                 // ボット対戦の時
@@ -66,7 +66,19 @@ class AjaxController extends Controller
                         $judge = $requestLogic->judge($content);
                         $json['counts'] = $judge['counts'];
                         $json['winner'] = $judge['winner'];
+                        // ログインしていたら
+                        if(auth()->check()) {
+                            $winner_id = 0;
+                            // 黒が勝者なら
+                            if($json['winner'] == 1) {
+                                $winner_id = auth()->user()->id;
+                            }
+                            $board->fill(['winner' => $winner_id])->save();
+                        }
                     }
+                    // コマの数だけ追加
+                    $judge = $requestLogic->judge($content);
+                    $json['counts'] = $judge['counts'];
                     break;
                     // オフライン対戦
                     case 2:
@@ -79,10 +91,12 @@ class AjaxController extends Controller
                         }
                     }
         // レスポンス
+        Log::debug($json);
         return response()->json($json);
     }
     // パス
     public function pass() {
 
     }
+    // 
 }
