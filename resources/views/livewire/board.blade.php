@@ -84,28 +84,21 @@
             start_count_time($count_time);
         })
     </script>
-    {{-- @foreach ($users as $user)
-        @if ($user->id == )
-            
-        @else
-            
-        @endif
-    @endforeach --}}
     <table class="table">
         @foreach (range(0,7) as $i1)
         <tr data-tr-index='{{ $i1 }}'>
             @for ($i2 = 0; $i2 < 8; $i2++)
                 @if (isset($content[$i1][$i2]) && $content[$i1][$i2] == 1)
                     @if (!empty($puttedCoord[0]) && $puttedCoord[0] == $i1 && $puttedCoord[1] == $i2)
-                        <td class="black put" data-td-index="{{ $i2 }}">●</td>
+                        <td class="black put" data-td-index="{{ $i2 }}"></td>
                     @else
-                        <td class="black" data-td-index="{{ $i2 }}">●</td>
+                        <td class="black" data-td-index="{{ $i2 }}"></td>
                     @endif
                 @elseif (isset($content[$i1][$i2]) && $content[$i1][$i2] == 2)
                     @if (!empty($puttedCoord[0]) && $puttedCoord[0] == $i1 && $puttedCoord[1] == $i2)
-                        <td class="white put" data-td-index="{{ $i2 }}">○</td>
+                        <td class="white put" data-td-index="{{ $i2 }}"></td>
                     @else
-                        <td class="white" data-td-index="{{ $i2 }}">○</td>
+                        <td class="white" data-td-index="{{ $i2 }}"></td>
                     @endif
                 @else
                     @php
@@ -133,7 +126,6 @@
     @isset($start_time)
         <div wire:poll.keep-alive.{{ $has_time }}s="time_over" class=""></div>
     @endisset
-    <a class="component_btn danger" href="{{ route('reset') }}">リセット</a>
     @if(isset($pass) && $next_color === $color)
         <button wire:click="pass" class="component_btn primary">パス</button>
     @endif

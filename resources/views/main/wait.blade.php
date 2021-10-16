@@ -7,5 +7,5 @@
         <button type="submit">戻る</button>
     </form>
     @livewire('wait')
-    <script src="{{ asset('js/wait.js') }}"></script>
+    <script src="{{ asset('js/websocket.js') }}"></script>
 @endsection

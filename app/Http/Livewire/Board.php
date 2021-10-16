@@ -285,6 +285,9 @@ class Board extends Component
         $this->has_time = $time;
         $user->save();
     }
+    public function is_finished() {
+
+    }
     public function render()
     {
         return view('livewire.board');

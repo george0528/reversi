@@ -36,7 +36,6 @@ Route::get('/', [MainController::class, 'index'])->name('index');
 Route::get('/mode/switch', [MainController::class, 'modeSwitch'])->name('modeSwitch');
 Route::get('/mode/bot', [MainController::class, 'bot'])->name('bot');
 Route::get('/mode/double', [MainController::class, 'double'])->name('double');
-Route::get('/reset', [MainController::class, 'reset'])->name('reset');
 Route::get('/guest', function(User $user) {
     $user->guest();
     return redirect()->back();
@@ -56,28 +55,6 @@ Route::group(['middleware' => ['auth']], function() {
 });
 
 // テスト
-Route::get('/delete', function() {
-    $user = auth()->user();
-    $user->room_id = null;
-    $user->save();
-    return redirect()->back();
-});
-Route::get('/user/info', function() {
-    $user = auth()->user();
-    dd($user);
-});
-Route::get('/livewire', function() {
-    $board = new Board;
-    $board = $board->find(47);
-    $reversi = $board->getContent();
-    return view('main.livewire', compact('reversi'));
-});
-Route::get('/test/sort', function() {
-    $room = new Room;
-    $room = $room->orderBy('id', 'desc')->first();
-    return $room;
-});
-
 // Ajax
 Route::post('/ajax/send', [AjaxController::class, 'send'])->name('ajaxSend');
 
