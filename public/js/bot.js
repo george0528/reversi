@@ -51,17 +51,17 @@
     // 指定の場所に置く　変更する
     const target = (i1,i2,user) => {
         let $T = $trs[i1].querySelectorAll('td')[i2];
-
         if(user == 2) {
-            $T.textContent = '○';
+            if ($T.classList.contains('black')) {
+                $T.classList.remove('black')
+            }
             $T.classList.add('white');
         }
         if(user == 1) {
-            $T.textContent = '●';
-            // whiteクラスを持っている時
-            if($T.classList.contains('white')) {
+            if ($T.classList.contains('white')) {
                 $T.classList.remove('white');
             }
+            $T.classList.add('black');
         }
     }
     // 置かれた場所にクラスを付与

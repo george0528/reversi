@@ -1,4 +1,8 @@
-
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 
 .displaynone {
@@ -25,6 +29,7 @@
     background-color: rgba(black, 0.6);
     width: 100vw;
     height: 100vh;
+    z-index: 100;
     .winner {
         color: white;
         top: 50%;
@@ -44,31 +49,66 @@
         display: block;
     }
 }
+
+@mixin bridge($color) {
+    &::before {
+        content: '';
+        width: 70px;
+        height: 70px;
+        text-align: center;
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: $color;
+        border-radius: 50%;
+    }
+}
 // テーブル（盤面）
 .table {
+    table-layout: fixed;
     background-color: white;
-    td {
-        width: 75px;
-        height: 75px;
-        background-color: #ddd;
-        text-align: center;
-        font-size: 3rem;
-        cursor: pointer;
-        &.white {
-            font-size: 2.4rem;
-        }
-        &.next {
-            background-color: lighten(#ddd, 7%);
-        }
-        &.put {
-            background-color: skyblue;
+    tr {
+        td {
+            padding: 0;
+            width: 75px;
+            height: 75px;
+            background-color: rgb(0,128,0);
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            &.white {
+                @include bridge(white);
+            }
+            &.black {
+                @include bridge(black);
+            }
+            &.next {
+                background-color: darken(white, 15%);
+            }
+            &.put {
+                background-color: skyblue;
+            }
         }
     }
 }
 
 
 
-
+.players {
+    display: flex;
+    .player_info {
+        text-align: center;
+        border: 1 solid black;
+        &:first-of-type {
+            margin-right: 50px;
+            .player_color {
+                font-size: 1.2rem;
+            }
+        }
+    }
+}
 
 // コンポーネント
 .component {
@@ -94,7 +134,7 @@
         }
     }
     // ボタン
-    &_btn {
+    &_btn { 
         display: inline-block;
         font-weight: 400;
         color: #212529;
@@ -136,7 +176,7 @@
         top: 0;
         z-index: 50;
         &.black {
-            background-color: rgba(black, 0.6);
+            background-color: rgba(black, 0.2);
         }
         &_child {
             position: absolute;

@@ -1,3 +1,10 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .displaynone {
   display: none;
 }
@@ -24,6 +31,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   width: 100vw;
   height: 100vh;
+  z-index: 100;
 }
 
 .finish .winner {
@@ -50,28 +58,75 @@
 }
 
 .table {
+  table-layout: fixed;
   background-color: white;
 }
 
-.table td {
+.table tr td {
+  padding: 0;
   width: 75px;
   height: 75px;
-  background-color: #ddd;
+  background-color: green;
   text-align: center;
-  font-size: 3rem;
   cursor: pointer;
+  position: relative;
 }
 
-.table td.white {
-  font-size: 2.4rem;
+.table tr td.white::before {
+  content: '';
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 50%;
 }
 
-.table td.next {
-  background-color: #efefef;
+.table tr td.black::before {
+  content: '';
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: black;
+  border-radius: 50%;
 }
 
-.table td.put {
+.table tr td.next {
+  background-color: #d9d9d9;
+}
+
+.table tr td.put {
   background-color: skyblue;
+}
+
+.players {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.players .player_info {
+  text-align: center;
+  border: 1 solid black;
+}
+
+.players .player_info:first-of-type {
+  margin-right: 50px;
+}
+
+.players .player_info:first-of-type .player_color {
+  font-size: 1.2rem;
 }
 
 .component_alert {
@@ -148,7 +203,7 @@
 }
 
 .component_cover.black {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .component_cover_child {

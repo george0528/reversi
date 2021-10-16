@@ -6,9 +6,9 @@
             @for ($i2 = 0; $i2 < $count; $i2++)
             @if(isset($reversi[$i1][$i2]))
                 @if ($reversi[$i1][$i2] == 1)
-                    <td class="black" data-td-index="{{ $i2 }}">●</td>
+                    <td class="black" data-td-index="{{ $i2 }}"></td>
                 @elseif ($reversi[$i1][$i2] == 2)
-                    <td class="white" data-td-index="{{ $i2 }}">○</td>
+                    <td class="white" data-td-index="{{ $i2 }}"></td>
                 @endif
             @else
                 <td data-td-index="{{ $i2 }}"></td>
