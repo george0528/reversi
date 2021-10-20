@@ -11750,11 +11750,13 @@ __webpack_require__.r(__webpack_exports__);
 //for Echo
 
 window.io = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
-protocol = location.protocol; //接続情報
+var protocol = window.location.protocol;
+var hostname = window.location.hostname; //接続情報
 
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'socket.io',
-  host: "".concat(protocol, "://localhost:6001")
+  protocol: protocol,
+  host: hostname
 });
 console.log('jsは生きてます'); //購読するチャネルの設定
 })();
