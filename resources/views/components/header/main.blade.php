@@ -1,8 +1,12 @@
 <body>
-<header class="header">
+<header class="header navbar">
     {{-- ログイン --}}
     @if (Route::has('login'))
-    <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+    <div class="header_left">
+        {{-- <img src="" alt="" class="logo"> --}}
+        <h1>logoの代替</h1>
+    </div>
+    <div class="header_right">
         @auth
             <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 underline">Dashboard</a>
         @else
@@ -13,7 +17,7 @@
             @endif
         @endauth
     </div>
-@endif
+    @endif
 </header>
 <div class="component">
     @if (session('alert'))

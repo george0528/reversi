@@ -14,5 +14,6 @@
         </select>
         <button type="submit">作成</button>
     </form>
+    <a href="{{ route('index') }}" class="component_btn primary">モード選択画面</a>
     @livewire('room-list')
 @endsection

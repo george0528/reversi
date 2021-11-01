@@ -31,8 +31,8 @@ class MainController extends Controller
             'board_id' => $b->id,
         ]);
         $players = [
-            ['name' => 'ゲスト','count' => 2],
-            ['name' => 'ボット','count' => 2]
+            ['name' => 'ゲスト', 'count' => 2, 'color' => 1],
+            ['name' => 'ボット', 'count' => 2, 'color' => 2]
         ];
         // ログインしていたら戦績を保存する
         if(auth()->check()) {
@@ -58,8 +58,8 @@ class MainController extends Controller
         ]);
         $room->save();
         $players = [
-            ['name' => 'ゲスト', 'count' => 2],
-            ['name' => 'ゲスト', 'count' => 2]
+            ['name' => 'ゲスト', 'count' => 2, 'color' => 1],
+            ['name' => 'ゲスト', 'count' => 2, 'color' => 2]
         ];
         if (auth()->check()) {
             $players[0]['name'] = auth()->user()->name;

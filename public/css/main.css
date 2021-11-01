@@ -1,8 +1,6 @@
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 .displaynone {
@@ -13,6 +11,20 @@
   background-color: black;
   padding: 10px;
   color: white;
+}
+
+.center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  text-align: center;
 }
 
 .pass {
@@ -57,9 +69,30 @@
   display: block;
 }
 
+.select_bar {
+  padding: 10px 30px;
+  width: 700px;
+  font-weight: bold;
+  font-size: 2rem;
+  -webkit-box-shadow: 1px 1px 3px gray;
+          box-shadow: 1px 1px 3px gray;
+  background-color: gray;
+  display: block;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  margin: 10px auto;
+}
+
 .table {
   table-layout: fixed;
   background-color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .table tr td {
@@ -70,6 +103,7 @@
   text-align: center;
   cursor: pointer;
   position: relative;
+  border: 1px solid white;
 }
 
 .table tr td.white::before {
@@ -114,6 +148,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .players .player_info {
@@ -289,5 +326,26 @@
   100% {
     color: rbga(black, 1);
   }
+}
+
+body {
+  margin: 0 30px;
+}
+
+.header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 60px;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.header_left .logo {
+  text-align: center;
 }
 /*# sourceMappingURL=main.css.map */
