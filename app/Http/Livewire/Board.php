@@ -30,6 +30,7 @@ class Board extends Component
     public $has_time;
     public $enemy_has_time;
     public $start_time;
+    public $players;
     // リスナー(websocketを含む)
     public function getListeners() {
         $events = [
@@ -105,6 +106,7 @@ class Board extends Component
         $this->enemy = true;
         $room = auth()->user()->room;
         if(isset($room) && empty($room->board->winner)) {
+            $this->set_players();
             $this->set_my_times();
             $users_times = $this->get_users_times();
             $this->emit('js_times', $users_times);
@@ -152,6 +154,16 @@ class Board extends Component
             $this->enemy = false;
             // ネクスト初期設定
             $board = auth()->user()->room->board;
+            // すでに勝負がついていたら
+            if(isset($board->winner)) {
+                // no_enemyを発生させないため
+                $this->enemy = true;
+                $winner_color = $this->winner_color($board->winner, $board);
+                $this->finish([
+                    'winner' => $winner_color, 
+                    'message' => 'すでに勝負はついています'
+                ]);
+            }
             if(isset($board)) {
                 $next_color = $board->next_color;
                 $Logic = new LivewireLogic;
@@ -174,6 +186,7 @@ class Board extends Component
                 $this->enemy = true;
                 $this->finish($finish_data);
             } else {
+                $this->set_players();
                 $this->set_my_times();
                 $users_times = $this->get_users_times();
                 $this->emit('js_times', $users_times);
@@ -223,7 +236,7 @@ class Board extends Component
         return redirect()->route('onlineList');
     }
     public function data_reset() {
-        $this->reset(['message', 'nexts', 'pass']);
+        $this->reset(['message', 'nexts', 'pass', 'players']);
     }
     public function user_data_delete() {
         $this->reset(['has_time', 'enemy_has_time']);
@@ -285,11 +298,25 @@ class Board extends Component
         $this->has_time = $time;
         $user->save();
     }
+    public function set_players()
+    {
+        $user = auth()->user();
+        if(isset($user)) {
+            $board = $user->board;
+            if(isset($board) && isset($board->user_1) && isset($board->user_2)) {
+                $this->players = [
+                    [$board->user_1, 'color' => 1],
+                    [$board->user_2, 'color' => 2]
+                ];
+            }
+        }
+    }
     public function is_finished() {
 
     }
     public function render()
     {
+
         return view('livewire.board');
     }
 }

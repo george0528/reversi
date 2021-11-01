@@ -11756,7 +11756,8 @@ var hostname = window.location.hostname; //接続情報
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'socket.io',
   protocol: protocol,
-  host: hostname
+  host: hostname + ':6001',
+  port: 6001,
 });
 console.log('jsは生きてます'); //購読するチャネルの設定
 })();

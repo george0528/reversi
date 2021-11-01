@@ -1,7 +1,5 @@
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 
@@ -12,6 +10,13 @@
     background-color: black;
     padding: 10px;
     color: white;
+}
+// center
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
 // パス
 .pass {
@@ -65,10 +70,25 @@
         border-radius: 50%;
     }
 }
+.select_bar {
+    padding: 10px 30px;
+    width: 700px;
+    font-weight: bold;
+    font-size: 2rem;
+    box-shadow: 1px 1px 3px gray;
+    background-color: gray;
+    display: block;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px auto;
+}
 // テーブル（盤面）
 .table {
     table-layout: fixed;
     background-color: white;
+    display: flex;
+    justify-content: center;
     tr {
         td {
             padding: 0;
@@ -78,6 +98,7 @@
             text-align: center;
             cursor: pointer;
             position: relative;
+            border: 1px solid white;
             &.white {
                 @include bridge(white);
             }
@@ -90,6 +111,21 @@
             &.put {
                 background-color: skyblue;
             }
+            // ひっくりかえすアニメーション jsじゃないと無理
+            // &.turn {
+            //     animation: turn_over 0.5s linear 0 1 forwards;
+            // }
+            // @keyframes turn_over {
+            //     0% {
+            //         transform: translateY(0);
+            //     }
+            //     50% {
+            //         transform: translateY(50%);
+            //     }
+            //     50.1% {
+            //         transform: translateY(50%);
+            //     }
+            // }
         }
     }
 }
@@ -98,6 +134,7 @@
 
 .players {
     display: flex;
+    justify-content: center;
     .player_info {
         text-align: center;
         border: 1 solid black;
@@ -222,6 +259,23 @@
             100% {
                 color: rbga(black, 1);
             }
+        }
+    }
+}
+
+
+body {
+    margin: 0 30px;
+}
+
+.header {
+    display: flex;
+    height: 60px;
+    justify-content: space-between;
+    align-items: center;
+    &_left {
+        .logo {
+            text-align: center;
         }
     }
 }

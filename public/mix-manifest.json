@@ -1,7 +1,4 @@
 {
     "/js/app.js": "/js/app.js",
-    "/js/websocket.js": "/js/websocket.js",
-    "/js/wait.js": "/js/wait.js",
-    "/js/test.js": "/js/test.js",
     "/css/app.css": "/css/app.css"
 }
