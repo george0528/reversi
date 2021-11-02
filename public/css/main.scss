@@ -23,6 +23,7 @@
     display: none;
     &.open {
         display: block;
+        margin-bottom: 20px;
     }
 }
 // 終了
@@ -89,6 +90,7 @@
     background-color: white;
     display: flex;
     justify-content: center;
+    margin-bottom: 30px;
     tr {
         td {
             padding: 0;
@@ -134,7 +136,13 @@
 
 .players {
     display: flex;
+    background-color: lighten(gray, 10%);
     justify-content: center;
+    margin: 10px auto;
+    align-self: center;
+    justify-self: center;
+    width: calc(75px * 8);
+    border: 1px solid black;
     .player_info {
         text-align: center;
         border: 1 solid black;
@@ -142,6 +150,26 @@
             margin-right: 50px;
             .player_color {
                 font-size: 1.2rem;
+            }
+        }
+        .player_color {
+            position: relative;
+            height: 30px;
+            span {
+                &.black {
+                    @include bridge(black);
+                    &::before {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+                &.white {
+                    @include bridge(white);
+                    &::before {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
             }
         }
     }
@@ -173,6 +201,7 @@
     // ボタン
     &_btn { 
         display: inline-block;
+        align-self: center;
         font-weight: 400;
         color: #212529;
         text-align: center;

@@ -33,6 +33,7 @@
 
 .pass.open {
   display: block;
+  margin-bottom: 20px;
 }
 
 .finish {
@@ -93,6 +94,7 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  margin-bottom: 30px;
 }
 
 .table tr td {
@@ -148,9 +150,16 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  background-color: #9a9a9a;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  margin: 10px auto;
+  -ms-flex-item-align: center;
+      align-self: center;
+  justify-self: center;
+  width: calc(75px * 8);
+  border: 1px solid black;
 }
 
 .players .player_info {
@@ -164,6 +173,51 @@
 
 .players .player_info:first-of-type .player_color {
   font-size: 1.2rem;
+}
+
+.players .player_info .player_color {
+  position: relative;
+  height: 30px;
+}
+
+.players .player_info .player_color span.black::before {
+  content: '';
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: black;
+  border-radius: 50%;
+}
+
+.players .player_info .player_color span.black::before {
+  width: 20px;
+  height: 20px;
+}
+
+.players .player_info .player_color span.white::before {
+  content: '';
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 50%;
+}
+
+.players .player_info .player_color span.white::before {
+  width: 20px;
+  height: 20px;
 }
 
 .component_alert {
@@ -192,6 +246,9 @@
 
 .component_btn {
   display: inline-block;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
   font-weight: 400;
   color: #212529;
   text-align: center;

@@ -1,18 +1,14 @@
 <div class="players">
   @php
-      $player_count = 1;
-      $colors = ['●', '○'];
+      $colors = ['black', 'white'];
   @endphp
   @isset($players)
-    @foreach ($players as $player)
+    @foreach ($players as $index => $player)
     <div class="player_info">
-      <h4><span class="player{{$player_count}}_name">{{ $player['name'] }}</span></h4>
-      <div class="player_color">{{ $colors[$player_count - 1] }}</div>
-      <div><span class="player{{$player_count}}_count">{{ $player['count'] }}</span></div>
+      <h4><span class="player{{$index + 1}}_name">{{ $player['name'] }}</span></h4>
+      <div class="player_color"><span class="{{$colors[$index]}}"></span></div>
+      <div><span class="player{{$index + 1}}_count">{{ $player['count'] }}</span></div>
     </div>
-    @php
-        $player_count++;
-        @endphp
     @endforeach
   @endisset
 </div>
