@@ -175,6 +175,13 @@
     }
 }
 
+
+.room_list {
+    .room_card {
+        margin: 10px 0;
+    }
+}
+
 // コンポーネント
 .component {
     // アラート
@@ -278,6 +285,7 @@
     &_flash_text {
         color: #000;
         animation: flash 1s linear infinite;
+        margin: 10px 0;
         @keyframes flash {
             0% {
                 color: rgba(black, 1);
@@ -293,8 +301,8 @@
 }
 
 
-body {
-    margin: 0 30px;
+header, main, footer {
+    padding: 0 30px;
 }
 
 .header {

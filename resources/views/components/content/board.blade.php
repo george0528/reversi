@@ -1,4 +1,4 @@
-<main class="main">
+<div class="div">
     {{-- <h1>現在のカラー　：　<span class="color" data-color="1">黒</span></h1> --}}
     <table class="table">
         @for ($i1 = 0; $i1 < $count; $i1++)
@@ -17,7 +17,7 @@
         </tr>
         @endfor
     </table>
-</main>
+</div>
 <div class="center">
     <div class="pass">
         <h3>パスするしかありません</h3>

@@ -1,5 +1,5 @@
-<body>
-<header class="header navbar">
+<body class="bg-gray-100">
+<header class="header navbar bg-white shadow">
     {{-- ログイン --}}
     @if (Route::has('login'))
     <div class="header_left">

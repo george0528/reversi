@@ -220,6 +220,10 @@
   height: 20px;
 }
 
+.room_list .room_card {
+  margin: 10px 0;
+}
+
 .component_alert {
   padding: 15px;
   margin: 20px 0;
@@ -359,6 +363,7 @@
   color: #000;
   -webkit-animation: flash 1s linear infinite;
           animation: flash 1s linear infinite;
+  margin: 10px 0;
 }
 
 @-webkit-keyframes flash {
@@ -385,8 +390,8 @@
   }
 }
 
-body {
-  margin: 0 30px;
+header, main, footer {
+  padding: 0 30px;
 }
 
 .header {
