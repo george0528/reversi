@@ -97,11 +97,18 @@
   margin-bottom: 30px;
 }
 
+.table tbody {
+  background-color: green;
+}
+
+.table tr {
+  background-color: green;
+}
+
 .table tr td {
   padding: 0;
   width: 75px;
   height: 75px;
-  background-color: green;
   text-align: center;
   cursor: pointer;
   position: relative;

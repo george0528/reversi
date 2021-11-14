@@ -236,7 +236,7 @@ class Board extends Component
         return redirect()->route('onlineList');
     }
     public function data_reset() {
-        $this->reset(['message', 'nexts', 'pass', 'players']);
+        $this->reset(['message', 'nexts', 'pass']);
     }
     public function user_data_delete() {
         $this->reset(['has_time', 'enemy_has_time']);
@@ -249,10 +249,21 @@ class Board extends Component
     }
     public function turn_next_color() {
         $this->reset(['start_time']);
-        $this->next_color = auth()->user()->room->board->next_color;
+        $board = auth()->user()->room->board;
+        $this->next_color = $board->next_color;
         if(isset($this->next_color)) {
             $users_times = $this->get_users_times();
             $this->emit('js_times', $users_times);
+        }
+        // コマのセット
+        $Logic = new RequestLogic;
+        $data = $Logic->judge($board->getContent());
+        if($this->players[0]['color'] == 1) {
+            $this->players[0]['count'] = $data['counts'][1];
+            $this->players[1]['count'] = $data['counts'][2];
+        } else {
+            $this->players[1]['count'] = $data['counts'][2];
+            $this->players[0]['count'] = $data['counts'][1];
         }
     }
     public function winner_color($winner, $board) {
@@ -302,11 +313,19 @@ class Board extends Component
     {
         $user = auth()->user();
         if(isset($user)) {
-            $board = $user->board;
-            if(isset($board) && isset($board->user_1) && isset($board->user_2)) {
+            $room = $user->room;
+            if(isset($room)) {
+                if($room->users[0]->is_guest_user) {
+                    $room->users[0]->name = 'ゲスト';
+                    // $room->users[0]->save();
+                }
+                if($room->users[1]->is_guest_user) {
+                    $room->users[1]->name = 'ゲスト';
+                    // $room->users[1]->save();
+                }
                 $this->players = [
-                    [$board->user_1, 'color' => 1],
-                    [$board->user_2, 'color' => 2]
+                    ['name' => $room->users[0]->name, 'color' => $room->users[0]->color, 'count' => 2],
+                    ['name' => $room->users[1]->name, 'color' => $room->users[1]->color, 'count' => 2]
                 ];
             }
         }
@@ -316,7 +335,6 @@ class Board extends Component
     }
     public function render()
     {
-
         return view('livewire.board');
     }
 }

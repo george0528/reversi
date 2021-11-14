@@ -45,9 +45,8 @@
     @endif
     <button wire:click="surrender" class="component_btn danger">投了</button>
     @include('components.content.players')
-    <h1>あなたの色は{{ $color_txt }}</h1>
-        <h1>あなたの残り時間：<span class="my_time">{{ $has_time }}</span></h1>
-        <h1>相手の残り時間：<span class="enemy_time">{{ $enemy_has_time }}</span></h1>
+    <h1>あなたの残り時間：<span class="my_time">{{ $has_time }}</span></h1>
+    <h1>相手の残り時間：<span class="enemy_time">{{ $enemy_has_time }}</span></h1>
     <script>
         var count_flag = false;
         var count_time;

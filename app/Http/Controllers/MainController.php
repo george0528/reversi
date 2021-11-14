@@ -62,7 +62,9 @@ class MainController extends Controller
             ['name' => 'ゲスト', 'count' => 2, 'color' => 2]
         ];
         if (auth()->check()) {
-            $players[0]['name'] = auth()->user()->name;
+            if(!auth()->user()->is_guest_user) {
+                $players[0]['name'] = auth()->user()->name;
+            }
         }
         return view('main.double', compact('room', 'players'));
     }
