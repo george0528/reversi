@@ -151,13 +151,13 @@
                     }
                 }
                 // テスト
-                $nexts = document.querySelectorAll('.next');
-                if(!json['pass'] && $nexts) {
-                    var $next = $nexts[random($nexts)];
-                    $next.click();
-                } else {
-                    // document.querySelector('.pass').querySelector('button').click();
-                }
+                // $nexts = document.querySelectorAll('.next');
+                // if(!json['pass'] && $nexts) {
+                //     var $next = $nexts[random($nexts)];
+                //     $next.click();
+                // } else {
+                //     // document.querySelector('.pass').querySelector('button').click();
+                // }
             }, 500);
         })
         .catch(error => {

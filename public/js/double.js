@@ -127,13 +127,12 @@ const api = (i1,i2) => {
         if(json['pass']) {
             console.log('置ける場所がありません。');
             var pass = document.querySelector('.pass');
-            console.log(pass);
             pass.classList.add('open');
         } else {
             // 次に置ける場所を指定する
             nexts(json['nextCoords']);
-            $nexts = document.querySelectorAll('.next');
-            $nexts[0].click();
+            // $nexts = document.querySelectorAll('.next');
+            // $nexts[0].click();
         }
     })
     .catch(error => {
